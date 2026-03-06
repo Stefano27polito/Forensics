@@ -1,6 +1,110 @@
-% Example of figure
-\section{Section 1}
-\begin{figure}[H]
-  \includegraphics[page = 1,trim = 2cm 16.5cm 2cm 5cm, clip, width = 0.9\textwidth]{\slides}
-  \caption{Example of description}
-\end{figure}
+\mychapter{ATZENI}
+
+\section{Story of forensics}
+
+The origins of forensics science can be interpreted in two ways:
+\begin{itemize}
+  \item as the moment when the term ``forensic science'' was formally defined
+  \item as the earliest historical applications of forensic concepts aimed at identifying individuals and reconstructing events
+\end{itemize}
+
+\noindent
+Some of the earliest forensic practices date back approximately 4,000 years.
+
+\begin{itemize}
+\item \textbf{Ancient Babylon}: fingerprints were used in commercial agreements to identify individuals involved in transactions.
+\item \textbf{Ancient China}: the manuscript \emph{Xi Duan Hu} (``The Washing Away of Wrongs'') described early investigative techniques for determining causes of death, such as drowning or strangulation.
+\end{itemize}
+
+
+\subsubsection {Modern Forensic }
+
+Modern forensic science began to emerge during the nineteenth century.\\
+Key milestones include:
+
+\begin{itemize}
+\item \textbf{1835 Henry Goddard}: first documented use of ballistic comparison to identify the weapon used in a murder.
+\item \textbf{Henry Faulds}: proposed systematic use of fingerprints for personal identification.
+\item \textbf{Sir Francis Galton}: introduced structured fingerprint classification (loops, whorls, arches) and promoted large fingerprint collections.
+\end{itemize}
+
+\noindent
+The scientific progress of forensic methods was largely driven by:
+\begin{itemize}
+\item methodological standardization,
+\item structured data collection,
+\item large datasets for comparison.
+\end{itemize}
+
+
+\subsubsection{Historical Evolution of Digital Forensics}
+
+Digital forensics emerged much later than traditional forensic science, following the widespread adoption of computers and digital systems.
+\bigskip
+
+\noindent
+A fundamental milestone in digital forensics is the \textbf{Morris Worm} of 1989, one of the first large-scale computer worms.
+\medskip
+
+\noindent
+Its investigation required analysis of:
+\begin{itemize}
+\item network logs,
+\item system activity,
+\item email communications.
+\end{itemize}
+
+\noindent
+Recent technological developments have significantly complicated digital investigations.
+
+\begin{itemize}
+  \item \textbf{Mobile devices} collect large amounts of personal information, including location data, communication history, and social interactions.
+  \item \textbf{Cloud computing} introduces further complexity because data is frequently stored on remote servers rather than on the seized device. Investigators therefore often require cooperation from cloud providers or access
+\end{itemize}
+
+
+\subsection{The Morris Worm: Focus}
+
+It is often considered both the first major cyber attack and one of the earliest cases that required a structured digital forensic investigation.\\
+The worm was created by \textbf{Robert Morris}, a graduate student in computer science and the son of a cryptographer working at the U.S. National Security Agency. Morris did not intend to launch a destructive attack, but rather to experiment with the feasibility of a self-propagating worm.\\
+In November 1988, the worm was released on the \textbf{arpanet}
+\subsubsection*{Technical Characteristics}
+
+The worm targeted \textbf{Unix systems} and was written in the C programming language.
+\\
+It propagated by exploiting several weaknesses common in systems of that period\\
+However, Morris added a probability (approximately \textbf{14\%}) that the worm would still replicate even if the system reported that it was already infected. 
+
+\subsubsection*{Impact}
+
+The consequences were dramatic for the scale of the network at the time.
+
+\begin{itemize}
+\item Approximately \textbf{6,000 machines} were infected.
+\item Around \textbf{2,000 infections occurred within 15 hours}.
+\item Estimated economic damage reached \textbf{10 million USD}.
+\end{itemize}
+
+\subsubsection*{Legal Consequences}
+
+Robert Tappan Morris was prosecuted under the \textbf{Computer Fraud and Abuse Act (CFAA)}, one of the first applications of this federal law.
+
+The sentence included:
+\begin{itemize}
+\item three years of probation,
+\item community service,
+\item a \$10,000 fine.
+\end{itemize}
+
+\subsubsection*{Long-Term Effects}
+
+The Morris Worm had several lasting impacts on cybersecurity:
+
+\begin{itemize}
+\item creation of the first \textbf{Computer Emergency Response Team (CERT)} at Carnegie Mellon University, supported by DARPA;
+\item increased awareness of cybersecurity risks in academic networks;
+\item recognition of the need for coordinated incident response.
+\end{itemize}
+
+\noindent
+At the time, parts of the Internet backbone were disconnected for several days to prevent further propagation.
