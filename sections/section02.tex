@@ -1,6 +1,185 @@
-% Example of figure
-\section{Section 2}
-\begin{figure}[H]
-  \includegraphics[page = 1,trim = 2cm 16.5cm 2cm 5cm, clip, width = 0.9\textwidth]{\slides}
-  \caption{Example of description}
-\end{figure}
+%%lezione 25/02
+
+\section{CF purposes}
+
+Digital forensics has two main perspectives: a \textbf{legal perspective} and a \textbf{technical perspective}.  
+While the legal perspective focuses on evidence admissibility and judicial procedures, the technical perspective focuses on reconstructing events and understanding the mechanisms behind an incident.
+\medskip
+
+\noindent
+From a technical viewpoint, the main goal of a forensic investigation is to answer a set of fundamental questions:
+
+\begin{itemize}
+\item \textbf{What happened}
+\item \textbf{Who was involved}
+\item \textbf{When it happened}
+\item \textbf{Where it happened}
+\item \textbf{Why it happened}
+\end{itemize}
+\noindent
+These questions guide the entire investigation process.
+
+\bigskip
+
+\noindent
+One of the central concepts in digital forensics is the \textbf{timeline}.  
+A timeline reconstructs the sequence of events by identifying the exact or approximate time at which actions occurred.
+\noindent
+Accurate temporal information allows investigators to:
+\begin{itemize}
+\item correlate different events,
+\item identify cause–effect relationships,
+\item detect inconsistencies in explanations.
+\end{itemize}
+
+\subsection {``Where''}
+
+In traditional forensics, the location of an event refers to a physical place (e.g., a room, building, or street).  
+In digital forensics, the concept of location refers to \textbf{digital environments}, such as:
+
+\begin{itemize}
+\item computers and laptops
+\item mobile devices and tablets
+\item network infrastructures
+\item IoT devices
+\end{itemize}
+
+\noindent
+Evidence of activity may appear in different sources, including system logs, network traffic, memory usage, or even indirect indicators such as battery usage or allocated memory.
+
+\subsection {Understanding Motivations}
+
+Once the timeline, actors, and locations are reconstructed, investigators may attempt to explain the \textbf{motivation} behind the incident.\\
+This explanation must be grounded in the collected evidence and may involve:
+\begin{itemize}
+\item human actors,
+\item automated processes,
+\item malicious software.
+\end{itemize}
+\noindent
+For instance, in the case of the Morris Worm, investigators initially observed system crashes. By analyzing infected machines and tracing the propagation path across the network, they were able to reconstruct the origin of the infection and identify the initial source.
+
+\subsubsection{Technical Investigation Process}
+
+From a technical perspective, investigators analyze several types of artifacts:
+
+\begin{itemize}
+\item \textbf{Software artifacts}: programs involved in the incident, including malware.
+\item \textbf{System configuration}: operating systems, installed applications, and system settings.
+\item \textbf{Network interactions}: connections between systems, network packets, and communication flows.
+\item \textbf{Affected devices}: computers, mobile devices, printers, webcams, IoT devices, and other network nodes.
+\end{itemize}
+
+\noindent
+Network analysis is particularly important because it allows investigators to reconstruct interaction graphs between devices and identify the origin of malicious activity.
+
+\subsubsection*{Artifacts and Damage Analysis}
+
+Another key task is the identification of \textbf{damaged or missing data}. This may include:
+
+\begin{itemize}
+\item deleted files,
+\item modified system data,
+\item encrypted information whose keys are no longer available.
+\end{itemize}
+\noindent
+In many cases, encrypted data without the corresponding key is effectively equivalent to permanently deleted information.
+\\
+These artifacts provide important starting points for reconstructing the sequence of malicious actions and understanding how an incident occurred.
+
+\subsection{Digital Evidence and Fundamental Concepts}
+
+The core concept in digital forensics is \textbf{digital evidence}, namely any digital data that may support conclusions in an investigation or legal proceeding.
+
+\medskip
+\noindent
+A digital investigation focuses on the \textbf{collection, examination, and interpretation} of such evidence while preserving its integrity.
+
+\subsubsection{Fragility of Digital Evidence}
+
+Digital evidence is fragile and may be altered both physically and logically. Investigators must therefore avoid modifying the original data.
+
+Two main aspects are relevant:
+
+\begin{itemize}
+\item \textbf{Physical preservation}: protection from physical damage.
+\item \textbf{Logical preservation}: prevention of unintended changes to data or metadata.
+\end{itemize}
+
+\noindent
+For example, normal access through the operating system may modify metadata such as the \textit{last access time}; for this reason, forensic analysis should rely on direct access to storage.
+
+\subsubsection{Chain of Custody}
+
+The \textbf{chain of custody} documents every step in the handling of evidence, from acquisition to presentation in court.
+
+It must record:
+
+\begin{itemize}
+\item who handled the evidence,
+\item when the action occurred,
+\item where the evidence was stored or transferred,
+\item what operation was performed.
+\end{itemize}
+
+\noindent
+This documentation is essential to demonstrate authenticity and integrity. It applies to both physical handling and logical processing.
+
+\subsubsection{Data Acquisition}
+
+Data acquisition is a critical phase because improper procedures may compromise admissibility
+\\
+The strategy depends on the state of the system:
+
+\begin{itemize}
+\item \textbf{running}, where volatile data may still be available,
+\item \textbf{powered off}, where volatile data is already lost.
+\end{itemize}
+
+\noindent
+Shutting down a system may alter evidence by closing files, erasing memory, and updating metadata. The acquisition method must therefore be chosen carefully.
+
+\subsubsection{Hashing and Integrity Verification}
+
+Hash functions are used to verify evidence integrity.
+\\
+Typical steps are:
+
+\begin{itemize}
+\item hash the original evidence,
+\item hash the forensic copy,
+\item compare the two values.
+\end{itemize}
+
+\noindent
+Secure algorithms such as \textbf{SHA-256} are preferred, while \textbf{MD5} is generally avoided.
+
+\subsubsection{Write Blockers}
+
+A \textbf{write blocker} prevents modification of the original storage during acquisition.
+
+Two forms exist:
+
+\begin{itemize}
+\item \textbf{hardware write blockers},
+\item \textbf{software write blockers}.
+\end{itemize}
+
+\noindent
+Hardware solutions generally provide stronger guarantees.
+
+\subsubsection{Forensic Images}
+
+A \textbf{forensic image} is a bit-by-bit copy of the original storage.
+
+It must:
+
+\begin{itemize}
+\item preserve the full content,
+\item be acquired with forensic tools,
+\item be verified through hashing,
+\item be documented in the chain of custody.
+\end{itemize}
+
+\noindent
+Analysis is performed on the forensic image, not on the original evidence, in order to preserve admissibility.
