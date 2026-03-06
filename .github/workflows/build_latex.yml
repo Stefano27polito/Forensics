@@ -1,0 +1,20 @@
+name: Trigger Build LaTeX document
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  call_build_latex:
+    uses: cybersecurity-polito/latex-workflow/.github/workflows/build_latex_workflow.yml@main
+    with:
+      root_file: 'main.tex'
+      prerelease: true
+    secrets:
+      envPAT: ${{ secrets.TOKEN }}

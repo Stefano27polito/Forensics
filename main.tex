@@ -1,0 +1,44 @@
+\documentclass[a4paper,12pt]{article} % Use the standard "article" class
+\usepackage{latex-templates/styles/polito}      % Load the custom package for Politecnico di Torino - Cybersecurity
+
+% Additional necessary packages
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[dvipsnames]{xcolor}  % Extended color options
+\usepackage{graphicx}            % Include images
+\usepackage{subcaption}          % Sub-figures and captions
+\usepackage{booktabs}            % Enhanced table formatting
+\usepackage{amsmath, amssymb}    % Math symbols and environments
+\usepackage{wrapfig}             % Text wrapping around figures
+\usepackage{soul}                % Highlighting text
+\usepackage{float}               % Float control for figures/tables
+\usepackage{tcolorbox}           % Colored boxes
+
+\graphicspath{{./images/}} % Path for images
+
+% General document information
+\title{Lecture Notes of \\Course name}
+\degree{Master's Degree in Cybersecurity}
+\author{John Doe \\ Jane Doe}
+\professor{Professor Name}
+\academicyear{202X/202X}
+\date{\today}
+
+\begin{document}
+
+\maketitlecustom % Custom command to create the personalized title page
+
+\tableofcontents % Generate the table of contents
+\newpage
+
+\def\slides{slides/sample-2.pdf}
+\include{sections/section01}
+
+\def\slides{slides/sample-2.pdf}
+\include{sections/section02}
+
+\appendix
+\section{Appendix A}
+% Content of Appendix A
+
+\end{document}
