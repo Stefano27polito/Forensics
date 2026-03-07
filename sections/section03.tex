@@ -1,5 +1,207 @@
 \section{Investigation Process}
-\begin{figure}[H]
-  \includegraphics[page = 1,trim = 2cm 16.5cm 2cm 5cm, clip, width = 0.9\textwidth]{\slides}
-  \caption{Example of description}
-\end{figure}
+
+Digital forensic investigations can be conceptually divided into a set of phases.\\ 
+These phases do not represent a rigid or universal procedure, but rather a \textbf{conceptual framework} that helps investigators understand how to approach an investigation and what subtleties arise during each step.
+\medskip
+
+\noindent
+Different standards propose slightly different models. Some frameworks describe four phases, others merge or rename certain steps.
+
+\begin{quotation}
+  \textbf{Author's npte:} \textit{ Porfessor Atzeny underlines that the goal is not to memorize a specific structure, but to understand the \textbf{underlying investigative logic}.}
+\end{quotation}
+
+\noindent
+Well-known standards and guidelines include:
+
+\begin{itemize}
+\item \textbf{ACPO Guidelines} (United Kingdom)
+\item \textbf{NIST Digital Forensics Framework}
+\item \textbf{ISO standards} related to forensic processes
+\end{itemize}
+
+\noindent
+Although these frameworks differ in terminology or number of steps, they describe broadly similar investigative processes.
+\medskip
+
+\noindent
+The investigation process can be described using five phases:
+
+\begin{enumerate}
+\item Identification
+\item Collection
+\item Acquisition
+\item Evaluation (or Examination)
+\item Presentation
+\end{enumerate}
+
+\subsection{1. Identification}
+
+The identification pphase consists of recognizing potential sources of digital evidence.\\
+Typical sources include:
+
+\begin{itemize}
+\item storage devices (drives, removable media)
+\item memory and running processes
+\item mobile devices
+\item network traffic
+\item cloud storage and online services
+\end{itemize}
+
+\noindent
+Investigatorsbegin forming preliminary hypotheses about relevance and also understanding the \textbf{volatility of information sources}. \\
+Some evidence may disappear or change quickly, which means investigators must later prioritize acquisition accordingly.  
+
+\medskip
+\noindent
+Whenever possible, investigators should gather contextual information \textbf{before interacting with the scene}, since direct interaction may alter digital evidence.
+\\
+Possible preliminary sources include:
+
+\begin{itemize}
+\item surveillance videos or photographs
+\item social media content
+\item organizational records or logs
+\end{itemize}
+
+\noindent
+Another important factor is the evaluation of \textbf{technical knowledge of the suspect}.\\
+If the suspect has limited technical expertise, the likelihood of sophisticated counter-forensic mechanisms may be lower.
+
+\subsubsection{Scene Identification}
+
+Once investigators reach the scene, the identification process continues with the recognition of actual devices and artifacts.\\
+During this phase investigators may build a preliminary \textbf{graph of entities}, connecting devices, users, and network components that could be involved in the incident.
+
+\subsubsection{Volatility and Prioritization}
+
+Understanding volatility is essential because some evidence may disappear during normal system activity.
+\\
+Highly volatile sources should generally be acquired first.
+\\
+For instance:
+
+\begin{itemize}
+\item a powered-off device should normally remain powered off until acquisition
+\item volatile memory may require specialized techniques to preserve its contents
+\end{itemize}
+
+\noindent
+This prioritization begins during the identification phase and guides the subsequent collection process.
+
+\subsubsection*{Example Scenario: Insider Data Exfiltration}
+
+Consider an investigation inside a company where an employee is suspected of exfiltrating sensitive documents.\\
+Potential evidence sources may include:
+
+\begin{itemize}
+\item employee workstations
+\item USB storage devices
+\item printers and shared devices
+\item temporary files and browser caches
+\item cloud storage services
+\item internal file sharing systems
+\end{itemize}
+
+\noindent
+Investigators may begin by collecting publicly available information about employees or suspects.\\  
+Tools commonly used for this type of intelligence gathering include:
+
+\begin{itemize}
+\item \textbf{SpiderFoot}
+\item \textbf{Maltego}
+\item \textbf{Shodan}
+\end{itemize}
+
+\noindent
+These tools help correlate information.
+\medskip
+
+\noindent
+In managed environments investigators may also collect system information through administrative access.
+\\
+Typical diagnostic commands can reveal useful information about system activity, including:
+
+\begin{itemize}
+\item connected USB devices
+\item mounted storage devices
+\item open files and processes
+\item active network connections
+\end{itemize}
+
+\noindent
+For istance:
+
+\begin{itemize}
+\item \texttt{lsusb}, \texttt{mount}, \texttt{lsof}, \texttt{netstat} on Unix-like systems
+\item administrative tools or PowerShell commands on Windows systems
+\end{itemize}
+
+
+\subsection{ 2. Collection Phase}
+
+Once potential evidence sources have been identified, the next step is the \textbf{collection phase}.\\ 
+The goal is to secure and isolate the identified evidence sources while minimizing any modification to their content.
+\medskip
+\noindent
+A fundamental rule is to \textbf{avoid unnecessary interaction with the system}.
+
+\subsubsection{Isolation of Evidence}
+
+A central objective of the collection phase is the \textbf{isolation of evidence sources} to prevent further modification or destruction.\\
+Isolation may occur at two levels:
+
+\begin{itemize}
+\item \textbf{Physical isolation}: preventing the suspect from accessing the device.
+\item \textbf{Logical isolation}: preventing network communication with the device.
+\end{itemize}
+
+\noindent
+Logical isolation may involve modifying network configurations such as firewall rules, network topology, or gateway settings to block communication with the device.
+
+\subsubsection{Preservation of Evidence}
+
+Investigators must also protect evidence from environmental or physical damage.\\
+For examples:
+
+\begin{itemize}
+\item protecting magnetic storage devices from strong magnetic fields
+\item handling fragile hardware carefully
+\item preserving volatile memory when possible
+\end{itemize}
+
+In advanced scenarios, volatile memory may even be preserved using specialized techniques such as cryogenic preservation to delay data loss.
+
+\subsubsection{Documentation and Evidence Tracking}
+
+During the collection phase, all actions must be carefully documented as part of the chain of custody.\\
+
+This documentation typically includes:
+
+\begin{itemize}
+\item who performed the action
+\item when the action occurred
+\item what operation was performed
+\item which device was involved
+\end{itemize}
+
+\noindent
+Devices should also be uniquely identified using information such as:
+
+\begin{itemize}
+\item model number
+\item serial number
+\item physical description
+\end{itemize}
+
+\subsubsection*{Forensic Equipment}
+
+Forensic investigators typically use specialized equipment during the collection phase.\\
+Examples include:
+
+\begin{itemize}
+\item hardware write blockers
+\item forensic imaging devices
+\item storage adapters for disk acquisition
+\item signal jammers to prevent wireless communication
+\end{itemize}
