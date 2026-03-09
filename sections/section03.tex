@@ -205,3 +205,203 @@ Examples include:
 \item storage adapters for disk acquisition
 \item signal jammers to prevent wireless communication
 \end{itemize}
+
+
+\subsection{ 3. Acquisition}
+
+The \textbf{acquisition phase} consists of creating copies of the evidence collected during the previous phase.\\ 
+These copies (artifacts) are used for analysis, allowing investigators to examine or manipulate data while preserving the original evidence.
+\medskip
+
+\noindent
+The key requirement is that the replica must maintain \textbf{full integrity} with respect to the original data.
+
+\subsubsection{Hashing and Integrity}
+
+A central concept in this phase is \textbf{hashing}.  
+Hash functions generate a digest that uniquely represents the content of a digital artifact.\\
+During acquisition, hashing is typically performed:
+
+\begin{itemize}
+\item before the acquisition
+\item after the acquisition
+\item whenever the evidence is manipulated or transferred
+\end{itemize}
+
+\noindent
+Even if it is possible to use different hash fuctions, the most commonly used in digital forensics are \textbf{MD5} and \textbf{SHA-family} (which is strictly racomanded).
+
+\subsubsection{Static vs Live Acquisition}
+
+A key decision during acquisition concerns whether the system should be analyzed in a \textbf{static} or \textbf{live} state.
+\medskip
+
+\noindent
+\textbf{Static acquisition} involves powering off the device and copying the storage directly.\\  
+This approach minimizes interaction with the system and is typically preferred when the relevant evidence resides on persistent storage.
+\medskip
+
+\noindent
+However, static acquisition may not always be appropriate. If relevant data is located in volatile sources the \textbf{live acquisition} may be necessary.
+\medskip
+
+\noindent
+In order to perform the acquisation phase, investigators use trust tools and.\\
+
+\subsubsection{Documentation and Evidence Integrity}
+
+All acquisition steps must be documented in detail, including:
+
+\begin{itemize}
+\item tools used
+\item parameters and commands
+\item timestamps
+\item resulting hash values
+\end{itemize}
+
+\noindent
+Throughout the acquisition phase, the \textbf{chain of custody} must be carefully maintained.\\
+\underline{Every step in the handling of evidence must be traceable.}
+
+
+\subsubsection{Example USB Acquisition}
+
+Consider a simplified scenario where an employee is suspected of exfiltrating sensitive financial spreadsheets using a \textbf{USB flash drive}.\\
+The investigation therefore focuses on acquiring the USB device in a forensically sound way.
+\medskip
+
+\noindent
+\textbf{Preparation}\\
+Before acquisition, the device must be clearly identified and documented:
+
+\begin{itemize}
+\item manufacturer, model, and serial number
+\item photographs and physical description
+\end{itemize}
+
+\noindent
+The investigator prepares:
+
+\begin{itemize}
+\item a trusted forensic workstation (Kali, CAINE)
+\item a hardware write blocker
+\item a dedicated forensic storage device
+\end{itemize}
+
+\noindent
+\textbf{Acquisition Procedure}
+
+\begin{enumerate}
+\item Connect the USB drive through the \textbf{write blocker}
+\item Create a \textbf{bit-by-bit forensic image} using a trusted tool (e.g., \texttt{dd}, \texttt{dc3dd}, FTK Imager)
+\item Compute cryptographic hashes of the evidence and of the image
+\item Verify that the hashes match
+\item Document the entire procedure in the chain of custody
+\end{enumerate}
+
+\noindent
+Example commands:
+
+\begin{itemize}
+\item Basic imaging with \texttt{dd}
+\end{itemize}
+
+\begin{verbatim}
+dd if=/dev/sdb of=USB_image.dd
+sha256sum USB_image.dd > USB_image.hash
+\end{verbatim}
+
+\begin{itemize}
+\item Imaging with integrated hashing using \texttt{dc3dd}
+\end{itemize}
+
+\begin{verbatim}
+dc3dd if=/dev/sdb of=USB_image.dd hash=sha256 log=USB_image.log
+\end{verbatim}
+
+\noindent
+\textbf{Integrity Verification}\\
+\noindent
+After imaging, the hash of the image is compared with the original digest to confirm integrity.
+\medskip
+
+\noindent
+\textbf{Documentation}\\
+\noindent
+The chain of custody must include:
+
+\begin{itemize}
+\item date, time, and location of acquisition
+\item operator name and persons present
+\item device identifiers (model, serial number)
+\item tools, commands, and hash algorithms used
+\end{itemize}
+
+\subsection{4. Evaluation}
+
+After acquisition, the investigation enters the \textbf{evaluation phase}, where the collected evidence is examined, correlated, and interpreted in order to reconstruct the events that occurred.
+
+\subsubsection{Integrity Verification}
+
+The first task is verifying whether the evidence is \textbf{authentic and admissible}.
+
+\subsubsection{ Timeline Reconstruction}
+
+The core objective of the evaluation phase is to reconstruct a coherent \textbf{timeline of events}.  
+Investigators extract relevant information from multiple sources and combine them to identify:
+
+\begin{itemize}
+\item the sequence of actions,
+\item the devices or actors involved,
+\item the temporal relationships between events.
+\end{itemize}
+
+\noindent
+Afeter these simple steps, investigators can begin to formulate hypotheses about what happened and why.
+
+\subsubsection*{Anti-Forensic Challenges}
+
+Modern systems introduce several obstacles to forensic analysis.  
+Some mechanisms intentionally or unintentionally act as \textbf{anti-forensic factors}, including:
+
+\begin{itemize}
+\item disk encryption,
+\item encrypted network communication (e.g.: HTTPS),
+\item data obfuscation or deletion techniques.
+\end{itemize}
+
+\subsubsection*{Legal and Procedural Constraints}
+
+The evaluation phase must comply also with \textbf{legal and procedural requirements}.
+\\
+Evidence may become inadmissible if:
+
+\begin{itemize}
+\item privacy regulations are violated,
+\item investigative procedures exceed the legal mandate,
+\item employees’ rights are breached during internal investigations.
+\end{itemize}
+\noindent
+Therefore, forensic investigators must balance \textbf{technical analysis, evidentiary integrity, and legal compliance} throughout the evaluation process.
+
+
+\subsection{5. Presentation}
+
+The final phase of a forensic investigation is the \textbf{reporting and presentation of the results}.
+\medskip
+
+\noindent
+The forensic analyst must adapt the report to the \textbf{target audience}. Different stakeholders may require different levels of detail:
+
+\begin{itemize}
+\item \textbf{technical experts}, who may require detailed procedures, tools, and commands used during the investigation;
+\item \textbf{managers or executives}, who are primarily interested in the implications and consequences of the findings;
+\item \textbf{judicial authorities}, who require a clear explanation of the evidence and its relevance within a legal framework.
+\end{itemize}
+
+\noindent
+For this reason, multiple versions of the report may be necessary, each with a different level of abstraction and terminology.\\
+
+\medskip
+\noindent
+Finally, the report itself becomes part of the \textbf{chain of custody}, so its integrity must be guaranteed.
