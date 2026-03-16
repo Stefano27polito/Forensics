@@ -1,0 +1,213 @@
+\section{Tools and Organization methodology}
+
+
+\subsection{Write Blockers}
+
+A \textbf{write blocker} is a forensic tool that allows investigators to access a storage device in read-only mode, preventing any modification of the original data. The core principle is that no bit on the original evidence should be altered during examination.
+\medskip
+
+\noindent
+Even minimal operations performed by the operating system, such as automatic mounting or metadata updates, may modify timestamps or file system structures. For this reason, write blockers are used during acquisition to guarantee the integrity of the original evidence.
+\bigskip
+
+\noindent
+Write blockers ensure several fundamental properties of a forensic investigation:
+
+\begin{itemize}
+\item \textbf{Integrity}: the original device remains completely unmodified during examination.
+\item \textbf{Repeatability}: the acquisition process can be repeated and produce identical results.
+\item \textbf{Legal admissibility}: courts require demonstrable evidence integrity.
+\item \textbf{Chain of custody}: read-only access preserves a verifiable record of evidence handling.
+\end{itemize}
+
+\subsubsection{Hardware Write Blockers}
+
+Hardware write blockers are physical devices placed between the evidence media and the forensic workstation. They intercept commands sent to the storage device and allow only read operations.\\
+Common examples include:
+
+\begin{itemize}
+\item Tableau forensic write blockers
+\item WiebeTech write blockers
+\item Logicube forensic duplicators
+\end{itemize}
+
+\noindent
+Exist two main types of hardware write blockers:
+
+\begin{itemize}
+\item \textbf{Pure write blockers}: devices that only enforce read-only access and require an external workstation for imaging.
+\item \textbf{Standalone blockers}: devices capable of performing imaging operations internally, often using a minimal embedded operating system.
+\end{itemize}
+
+\subsubsection{Software Write Blockers}
+
+Software write blockers implement read-only access \underline{at the operating system level}.\\
+Examples include:
+
+\begin{itemize}
+\item OSFMount (Windows)
+\item Linux mounting options such as \texttt{mount -o ro,noload}
+\item integrated forensic suite drivers
+\end{itemize}
+
+\noindent
+Although useful in some contexts, software write blockers are generally considered less reliable because background system processes may still modify metadata.
+
+\vspace{1 cm}
+
+\subsubsection{Acquisition Workflow}
+
+A typical forensic acquisition using a write blocker follows these steps:
+
+\begin{enumerate}
+\item Secure and document the evidence device.
+\item Photograph and record device identifiers.
+\item Connect the device through a hardware write blocker.
+\item Verify that the device is mounted in read-only mode.
+\item Perform a bit-by-bit forensic image of the device.
+\end{enumerate}
+
+\noindent
+Each step must be documented carefully as part of the chain of custody.
+
+\subsubsection*{Common Pitfalls}
+
+Several common mistakes may compromise forensic acquisition:
+
+\begin{itemize}
+\item connecting a suspect device directly to a forensic workstation without a write blocker
+\item misconfiguring software write-blocking options
+\item generating hashes only after acquisition instead of during the imaging process
+\item failing to document the exact model and configuration of the write blocker used
+\end{itemize}
+
+\noindent
+Proper documentation must record the device model, serial number, firmware version, and the connection configuration used during acquisition.\\
+Forensic investigations follow \textbf{standard operating procedures (SOPs)} that specify the exact acquisition workflow (step-by-step documentation).
+
+
+
+\subsection{Scene Assessment and Data Source Identification}
+
+Scene assessment represents the preliminary phase of a digital forensic investigation and aims to understand the context, scope, and potential sources of digital evidence before any acquisition activity begins.
+\medskip
+
+\noindent
+The process typically combines contextual intelligence, environmental observation, and a structured identification of devices and data repositories. A systematic approach ensures that investigators can build a coherent picture of the digital environment prior to collecting evidence.
+
+\subsubsection{OSINT}
+
+Before approaching the physical scene or connecting to a network environment, investigators should perform a preparatory intelligence phase using publicly accessible information sources. Open Source Intelligence (OSINT) enables analysts to gather contextual data about organizations, systems, and individuals involved in the investigation.
+\medskip
+
+\noindent
+This preliminary stage helps determine potential infrastructure, services, and technological environments associated with the target.
+\\
+Typical OSINT activities include:
+
+\begin{itemize}
+\item \textbf{Domain and IP research}: querying WHOIS databases, DNS records, and IP geolocation services to understand domain ownership, registration history, and hosting infrastructure.
+\item \textbf{Public and social records}: examining social media platforms, professional profiles, and public repositories to identify potential digital identities, organizational roles, and communication channels.
+\item \textbf{Technology stack profiling}: identifying operating systems, software platforms, and cloud services through public disclosures, job postings, vendor documentation, or technology fingerprinting tools.
+\end{itemize}
+
+\subsubsection{Initial Survey of the Scene}
+
+After the preparatory intelligence phase, investigators perform an initial survey of the environment in order to establish the operational perimeter of the investigation. This survey should consider both physical and logical aspects of the scene.
+
+\subsubsection*{Physical Environment}
+
+The physical inspection focuses on identifying and documenting the environment where devices are located.
+\\
+Typical actions include:
+
+\begin{itemize}
+\item photographing the scene before manipulating any device;
+\item documenting the state of each device (powered on, powered off, or locked)
+\item recording cable connections and device configurations
+\item mapping the layout of workstations, servers, and network infrastructure
+\end{itemize}
+
+\subsubsection*{Logical Environment}
+
+In parallel, investigators must analyze the logical infrastructure associated with the suspect or organization.
+\\
+Key elements include:
+
+\begin{itemize}
+\item network topology and routing infrastructure;
+\item active network connections and communication endpoints;
+\item previously established connections and logs;
+\item authentication sessions and user activity.
+\end{itemize}
+
+\subsubsection{Identification of Key Devices and Data Locations}
+
+A central step in digital forensics is identifying all potential storage locations where relevant evidence may reside. Missing even a single data source can compromise the completeness of the investigation.
+\\
+Data sources can generally be divided into three main categories.
+
+\begin{itemize}
+\item \textbf{Local storage}: internal drives, SSDs, embedded storage in desktops, laptops, and mobile devices. Investigators should also verify firmware interfaces (e.g., BIOS/UEFI) for hidden or secondary storage.
+\item \textbf{Remote servers}: file servers, mail servers, database systems, and enterprise backup infrastructures hosted within the organization.
+\item \textbf{Cloud services}: SaaS platforms, cloud storage systems, and virtual infrastructures hosted by external providers.
+\end{itemize}
+
+\noindent
+Cloud environments introduce additional challenges such as jurisdictional limitations, provider cooperation requirements, and restricted direct access to infrastructure.
+
+\subsubsection* {NON-Connected Peripherals}
+
+Investigators must also examine devices that are indirectly connected to the primary systems under investigation. \\
+For istance: printers, scanners, removable media, and network-attached devices may contain relevant data or logs that provide insights into user activity or document transfers.
+
+
+\subsubsection{Ephemeral Data and Volatile Evidence}
+
+One of the most critical aspects of digital forensics is the identification and preservation of ephemeral data. This type of information is inherently volatile and may disappear within seconds if not captured promptly.
+\\
+Common ephemeral sources:
+
+\begin{itemize}
+\item \textbf{Volatile memory (RAM)}: running processes, encryption keys, clipboard data, and active network sessions.
+\item \textbf{Temporary application files}: artifacts created by software during normal operation.
+\item \textbf{Cloud synchronization logs}: records of file uploads, downloads, or version changes.
+\item \textbf{Hidden disk regions}: Host Protected Areas (HPA) and Device Configuration Overlays (DCO) that may conceal data from standard system utilities.
+\end{itemize}
+
+\noindent
+Investigators should prioritize the acquisition of volatile memory and temporary artifacts before performing any action that could modify the system state.
+
+\subsection{Assessment Workflow}
+
+The complete scene assessment process can be summarized as a structured workflow in which each phase builds upon the previous one.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+font=\small,
+node distance=8mm,
+>=Latex,
+box/.style={
+rectangle,
+rounded corners,
+draw=black,
+fill=gray!10,
+align=center,
+text width=3.5cm,
+minimum height=7mm
+}
+]
+
+\node[box] (osint) {\textbf{Pre-Analysis}\\Open Source Intelligence};
+\node[box,below=of osint] (survey) {\textbf{Initial Survey}\\Physical and Logical Context};
+\node[box,below=of survey] (identify) {\textbf{Identify Devices}\\Key Systems and Storage};
+\node[box,below=of identify] (map) {\textbf{Map Data Sources}\\Topology and Asset Inventory};
+
+\draw[->] (osint) -- (survey);
+\draw[->] (survey) -- (identify);
+\draw[->] (identify) -- (map);
+
+\end{tikzpicture}
+\caption{Simplified workflow for scene assessment and data source identification in digital forensics.}
+\end{figure}
