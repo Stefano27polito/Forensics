@@ -1,0 +1,195 @@
+\section{Non-Trusted Environment}
+
+A digital forensic investigation must assume that the analyzed system operates in a \textbf{non-trusted environment}. Compromise can occur at multiple layers (network, storage, memory, endpoint), often without visible anomalies. Therefore, the investigator must adopt an \textbf{adversarial mindset} and rely on controlled, certified tools to ensure evidential validity.
+
+\subsection{Attack Surfaces}
+
+Compromise can be broadly categorized into two main domains:
+
+\subsubsection*{Node-Level}
+
+At node level, the system itself is directly compromised. This may occur through:
+\begin{itemize}
+    \item malware or Trojan software embedded in legitimate applications,
+    \item social engineering exploiting human behavior,
+    \item physical access bypassing logical protections,
+    \item bugs and misconfigurations,
+    \item insider manipulation with privileged access.
+\end{itemize}
+
+\noindent
+At advanced levels, attackers may:
+\begin{itemize}
+    \item modify system calls or device drivers,
+    \item hide files or processes,
+    \item operate at firmware or BIOS level.
+\end{itemize}
+
+\subsubsection*{Network-Level}
+
+At network level, compromise occurs without necessarily altering endpoints:
+\begin{itemize}
+    \item traffic interception, modification, or injection,
+    \item insertion of malicious nodes,
+    \item credential redirection or harvesting.
+\end{itemize}
+
+
+\subsection{Man-at-Work Paradigm}
+
+A useful abstraction is the family of \textbf{“man-in-the-X”} attacks, representing different points of intervention.
+
+\subsubsection{Man-in-the-Middle (MITM)}
+
+An attacker intercepts communication between two parties and can:
+\begin{itemize}
+    \item read,
+    \item modify,
+    \item redirect traffic.
+\end{itemize}
+
+\paragraph{ARP Poisoning}
+Exploits unauthenticated ARP protocol to alter IP–MAC mappings and redirect traffic.
+
+\paragraph{Application-Level Attacks}
+Examples include:
+\begin{itemize}
+    \item Cross-Site Scripting (XSS),
+    \item Session hijacking via cookie theft.
+\end{itemize}
+
+\noindent
+HTTPS protects data in transit but not a compromised endpoint.
+
+\subsubsection{Man-in-the-Mobile}
+
+Targets mobile devices to bypass MFA:
+\begin{itemize}
+    \item intercepts OTP (e.g., ZitMo),
+    \item forwards credentials in real time.
+\end{itemize}
+
+\noindent
+Modern attacks leverage \textbf{AI automation}, enabling full compromise within minutes.
+
+\subsubsection{Man-in-the-Cloud}
+
+Focuses on authentication mechanisms:
+\begin{itemize}
+    \item theft of OAuth tokens,
+    \item excessive privilege exposure.
+\end{itemize}
+
+\subsubsection{Man-in-the-Browser}
+
+Malware modifies browser behavior:
+\begin{itemize}
+    \item alters forms,
+    \item redirects credentials,
+    \item targets online banking sessions.
+\end{itemize}
+
+\subsubsection{Man-in-the-Memory}
+
+Memory is a critical point since data is in plaintext during execution.
+
+\begin{itemize}
+    \item file-less malware operates entirely in memory,
+    \item sensitive data and cryptographic keys can be extracted,
+    \item leaves minimal forensic traces.
+\end{itemize}
+
+\noindent
+This technique is also used in legitimate investigations to bypass encryption.
+
+\subsubsection{Man-on-the-Side}
+
+A weaker but still effective attacker:
+\begin{itemize}
+    \item observes and injects traffic,
+    \item perturbs system behavior,
+    \item degrades monitoring accuracy.
+\end{itemize}
+
+\subsubsection{Endpoint Observation}
+
+Example: keyloggers capturing input before encryption, bypassing secure communication protocols.
+
+\subsubsection{Man-in-the-Disk (Storage-Level Attacks)}
+
+Storage is a \textbf{transit point} where data may be manipulated without detection.
+
+\paragraph{Temporary Directories}
+Shared folders (e.g., \texttt{/tmp}) allow:
+\begin{itemize}
+    \item symlink attacks,
+    \item overwrite of sensitive files.
+\end{itemize}
+
+\paragraph{Temporary File Injection}
+Attackers modify intermediate files:
+\begin{itemize}
+    \item macro injection in documents,
+    \item malicious payloads in images, PDFs, SVG.
+\end{itemize}
+
+\paragraph{CI/CD Pipeline Attacks}
+Injection of malicious artifacts in intermediate stages leads to compromised deployments.
+
+\paragraph{Log File Poisoning}
+Injection of crafted logs may:
+\begin{itemize}
+    \item mislead analysis,
+    \item trigger vulnerable parsers,
+    \item cause code execution.
+\end{itemize}
+
+\paragraph{Installer Manipulation}
+Temporary installation artifacts can be altered during updates or package downloads.
+
+\paragraph{Network Storage (e.g., SMB)}
+Misconfigured permissions expose shared files to:
+\begin{itemize}
+    \item modification,
+    \item interception,
+    \item hybrid network-storage attacks.
+\end{itemize}
+
+\paragraph{Database Manipulation}
+Direct modification of structured data (e.g., SQLite):
+\begin{itemize}
+    \item data alteration,
+    \item privilege escalation via role injection.
+\end{itemize}
+
+\paragraph{Library Hijacking}
+Malicious libraries loaded before legitimate ones due to search order.
+
+
+
+\subsection{Advanced Persistent Threats (APT)}
+
+APT campaigns combine all previous techniques into structured, long-term operations.\\
+The characteristics of APTs include:
+
+\begin{itemize}
+    \item \textbf{Advanced}: zero-days, custom malware, evasion.
+    \item \textbf{Persistent}: long-term presence (days to years).
+    \item \textbf{Threat}: high-impact consequences.
+\end{itemize}
+
+\noindent
+Even if there not exist a specific behaviural signature, APTs typically follow a common attack lifecycle:
+\begin{enumerate}
+    \item \textbf{Reconnaissance}: extensive information gathering (technical, social, organizational).
+    \item \textbf{Initial Intrusion}: exploitation of a single weak point.
+    \item \textbf{Persistence}: establishment of long-term access (malware, backdoors).
+    \item \textbf{Privilege Escalation}: increase control (credentials, vulnerabilities).
+    \item \textbf{Lateral Movement}: spread across nodes and users.
+\end{enumerate}
+
+\noindent
+An important example is the \textbf{APT28} (Fancy Bear) group, which has been active since at least 2007 and is linked to Russian intelligence. They have targeted government agencies, military organizations, and media outlets using spear phishing and custom malware.
+
+
+%%capisci se mettere esempio su systemcalls
