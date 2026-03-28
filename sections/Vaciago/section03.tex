@@ -1,0 +1,161 @@
+\section{Italian Law n.48/2008}
+
+Italian Law n. 48/2008 represents the formal ratification of the \textbf{Budapest Convention on Cybercrime} (2001). While the Convention provides the international baseline for harmonizing cybercrime legislation, the Italian implementation focuses on the modernization of the legal system to address the rapidly evolving digital landscape.
+\bigskip
+
+\noindent
+The law introduced three primary pillars of innovation into the Italian legal system:
+\begin{itemize}
+    \item \textbf{International Harmonization:} Alignment with the 68 member states of the Budapest Convention to facilitate cross-border cooperation.
+    \item \textbf{Reorganization of Cybercrime Offenses:} Integration of specific digital crimes into the Italian Penal Code to address modern IT threats.
+    \item \textbf{Corporate Liability:} Extension of \textbf{Legislative Decree 231/2001} to include cybercrime, establishing entity liability for offenses committed in the organization's interest.
+\end{itemize}
+
+\subsection{Typology of Digital Offenses}
+The 2008 reform categorizes offenses based on their impact on the CIA triad.
+
+\subsubsection*{Unauthorized Access (Article 615-ter)}
+The concept of \textit{"Accesso Abusivo"} is centered on the principle of \textit{ius excludendi alios} (the right to exclude others). 
+\begin{itemize}
+    \item \textbf{Authorization Limits:} A crime is committed not only by bypassing security but also by remaining in a system against the owner's will.
+    \item \textbf{Subjective Scope:} Even authorized users (e.g., employees) commit an offense if they access data for purposes outside their professional mandate, such as private interest or unauthorized disclosure.
+\end{itemize}
+
+\subsubsection*{Damage and Availability}
+The legal definition of "damage" has shifted from physical destruction to functional unavailability.
+\begin{itemize}
+    \item \textbf{Temporary Unavailability:} Actions that render a system temporarily unusable (e.g., DDoS or Ransomware) constitute criminal damage.
+    \item \textbf{Data Integrity:} Deleting data from corporate devices, even if backups exist in the cloud, is punishable if the intent was to create unavailability or violate company policy.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3cm}|p{5cm}|p{2.5cm}|}
+\hline
+\textbf{Crime Type} & \textbf{Legal Principle / Article} & \textbf{Primary Focus} \\
+\hline
+Unauthorized Access & \textit{Ius excludendi alios} (Art. 615-ter) & Confidentiality \\
+System Damage & Temporary/Permanent Unavailability & Availability \\
+Data Alteration & Fraudulent intent or public impact & Integrity \\
+Deepfakes & AI Law 2025 (Advanced Falsification) & Integrity/Trust \\
+\hline
+\end{tabular}
+\caption{Classification of digital offenses under Law 48/2008 and 2025 updates.}
+\end{table}
+
+\noindent
+A significant limitation of Law 48/2008 is its nature as a framework of principles rather than a detailed procedural manual.
+\begin{itemize}
+    \item \textbf{Jurisprudential Reliance:} In the absence of specific technical decrees, the application of the law relies heavily on Court of Cassation rulings.
+    \item \textbf{Dynamic Interpretation:} Legal standards regarding "temporary unavailability" and "legal access" evolve annually through case law, requiring continuous compliance monitoring.
+\end{itemize}
+
+
+\subsection{ \textit{Ius Excludendi Alios}}
+The core of Article 615-ter of the Italian Penal Code is the principle of \textit{ius excludendi alios}, the right of the system owner to exclude others. This legal framework creates a direct parallel between the protection of a physical domicile and a digital system.
+
+\subsubsection*{Limit of Authorization}
+A critical interpretation by the Italian Court of Cassation concerns users who possess legitimate credentials but use them for unauthorized purposes.
+\begin{itemize}
+    \item \textbf{Functional Violation:} An official (e.g., from the Tax Agency) who has technical access to a file but consults it for personal reasons (e.g., a favor for a relative) commits \textit{unauthorized access}.
+    \item \textbf{Breach of Duty:} The crime occurs the moment the actor violates the specific instructions or professional duties defined by the data controller.
+    \item \textbf{Formal Nature:} Unauthorized access is a formal crime; it does not require proof of digital damage or data exfiltration to be prosecuted.
+\end{itemize}
+
+\subsection{Evolution of Digital Damage and Data Alteration}
+The legal definition of "damage" in the Italian system has evolved from a 1944-era focus on physical destruction to a modern understanding of functional availability.
+\medskip
+
+\noindent
+The Italian judiciary now recognizes that "damage" does not require permanent destruction.
+\begin{itemize}
+    \item \textbf{Temporary Unavailability:} Actions such as DDoS attacks or Ransomware that render a system unusable for a period constitute criminal damage.
+    \item \textbf{Intentionality:} In a criminal trial, the prosecution must demonstrate both the material element (unavailability) and the intent (\textit{mens rea}) of the defendant.
+    \item \textbf{The Deletion Paradox:} Deleting personal data from a corporate device can be a crime if it violates company policy. Even if the data exists in a cloud backup, the act of local deletion with the intent to create a "tricky issue" for the employer can lead to criminal proceedings.
+\end{itemize}
+
+\subsubsection*{Alteration and Falsification}
+Since 2016, the Italian system has narrowed the scope of criminal data alteration.
+\begin{itemize}
+    \item \textbf{Private vs. Public:} Falsifying information between private parties is generally no longer a crime unless it constitutes fraud. However, falsifying documents for public institutions remains a serious offense.
+    \item \textbf{Deepfakes:} The 2025 AI legislation formally introduced specific crimes related to deepfakes to address the modern ease of digital falsification.
+\end{itemize}
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\small,node distance=6mm,>=Latex,
+box/.style={rectangle,rounded corners,draw=black,fill=gray!10,align=center,text width=5cm,minimum height=5mm}]
+\node[box] (step1) {\textbf{Legal Access}\\Legitimate Credentials};
+\node[box, below=0.5cm of step1] (step2) {\textbf{Policy Violation}\\Use for unauthorized purpose};
+\node[box, below=0.5cm of step2, fill=red!5] (step3) {\textbf{Art. 615-bis/ter}\\Criminal Unauthorized Access};
+\draw[->] (step1) -- (step2);
+\draw[->] (step2) -- (step3);
+\end{tikzpicture}
+\caption{The shift from legitimate access to criminal offense based on functional intent.}
+\end{figure}
+
+
+\subsection{Digital Forensics under Law 48}
+The ratification of the Budapest Convention through Law 48/2008 introduced rigorous procedural requirements for the identification, collection, and preservation of digital evidence to ensure its admissibility in court.
+\medskip
+
+\noindent
+Digital forensics is governed by the need to maintain the chain of custody and ensure that the evidence remains unaltered from the moment of acquisition.
+\begin{itemize}
+    \item \textbf{Identification vs. Acquisition:} The procedure distinguishes between identifying relevant data and the technical act of "freezing" it in its original state.
+    \item \textbf{Integrity through Hashing:} To guarantee immutability, every digital find must be associated with a unique hash value. Any alteration of the data during acquisition is subject to criminal sanctions.
+    \item \textbf{Non-Repeatable Acts:} Since digital systems are volatile, initial inspections are often classified as non-repeatable acts, requiring specific technical measures to prevent data degradation.
+\end{itemize}
+
+\subsubsection{Procedural Innovations: Inspections and Searches}
+The law updated the Italian Code of Criminal Procedure to address the peculiarities of "virtual" spaces.
+\begin{itemize}
+    \item \textbf{Remote Inspections:} Law enforcement can perform inspections of computer systems even remotely, provided they use techniques that ensure the original data is not modified.
+    \item \textbf{Duty of Cooperation:} System administrators and service providers are legally obligated to assist authorities in accessing encrypted or protected data.
+\end{itemize}
+
+\subsubsection{Data Retention}
+The legal framework imposes specific obligations on electronic communication providers regarding the storage of metadata for investigative purposes.
+
+\subsubsection*{Traffic Data Retention}
+Providers must store logs to allow the retrospective reconstruction of digital crimes.
+\begin{itemize}
+    \item \textbf{Metadata focus:} Retention applies to the "envelope" of the communication (who, when, where) rather than the content itself.
+    \item \textbf{Access Limits:} Access to this data requires a judicial mandate, balancing investigative needs with the right to privacy as outlined in the GDPR and NIS2 frameworks.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3cm}|p{5cm}|p{2.5cm}|}
+\hline
+\textbf{Forensic Phase} & \textbf{Technical Requirement} & \textbf{Legal Goal} \\
+\hline
+Identification & System mapping and volatile data triage & Completeness \\
+Acquisition & Bit-stream imaging and Hashing & Immutability \\
+Preservation & Controlled storage and Chain of Custody & Admissibility \\
+Analysis & Use of validated forensic tools & Reliability \\
+\hline
+\end{tabular}
+\caption{The standard forensic workflow under Law 48/2008 requirements.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\small,node distance=7mm,>=Latex,
+box/.style={rectangle,rounded corners,draw=black,fill=gray!10,align=center,text width=5cm,minimum height=6mm}]
+\node[box] (step1) {\textbf{Digital Scene}\\Identification of systems};
+\node[box, below=of step1] (step2) {\textbf{Acquisition}\\Hashing and Bit-copy};
+\node[box, below=of step2] (step3) {\textbf{Legal Proof}\\Court Admissibility};
+
+\draw[->] (step1) -- (step2);
+\draw[->] (step2) -- node[right]{Chain of Custody} (step3);
+\end{tikzpicture}
+\caption{Linear flow of digital evidence from acquisition to court admission.}
+\end{figure}
+
+\subsubsection*{The Role of the CISO in Investigations}
+In the context of corporate liability (D.Lgs. 231/2001), the CISO must ensure that internal incident response procedures do not contaminate potential evidence. Improper handling of a system after a breach can lead to the inadmissibility of evidence, hindering the organization's ability to defend itself or prosecute the attacker.
+
