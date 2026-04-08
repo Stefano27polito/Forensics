@@ -1,0 +1,90 @@
+\section{Hardware Abstraction and Data Access}
+
+In the context of a "sound and admissible" investigation, Prof. Atzeni highlights the critical transition from high-level OS metaphors to low-level hardware interaction.
+
+\subsection{The File System and Mounting Risks}
+OS provides a simplified interface to interact with storage  (files and folders), this abstraction presents specific forensic risks during the \textbf{mounting} process:
+\begin{itemize}
+    \item \textbf{Automatic Alteration:} modern OS may automatically update metadata (e.g., last access time) or attempt to repair file system inconsistencies upon mounting, potentially destroying evidence.
+    \item \textbf{Forensic Precaution:} an investigator must ensure the device is mounted in \textbf{read-only} mode at both the file system and block device levels to maintain data integrity.
+\end{itemize}
+
+\subsection{Unix Device Taxonomy}
+Under Unix-derived systems, hardware is abstracted as files within the \texttt{/dev} directory. Prof. Atzeni classifies these into several categories:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|l|p{6cm}|l|}
+\hline
+\textbf{Device Type} & \textbf{Characteristics} & \textbf{Examples} \\ \hline
+\textbf{Block Device} & Handles data in fixed-size blocks; allows \textbf{Random Access}. & HDD, SSD, USB \\ \hline
+\textbf{Character Device} & Handles data as a \textbf{continuous stream}; no random access. & Terminals, Consoles \\ \hline
+\textbf{Network Device} & Managed via packets and sockets using system calls. & \texttt{eth0}, \texttt{wlan0} \\ \hline
+\textbf{Pseudo-device} & Software interfaces emulating hardware features. & \texttt{/dev/null}, \texttt{/dev/loop} \\ \hline
+\textbf{Special-purpose} & Used for kernel interaction and memory management. & \texttt{/dev/mem}, \texttt{/dev/kmem} \\ \hline
+\end{tabular}
+\caption{Classification of devices according to Prof. Atzeni.}
+\end{table}
+
+\noindent
+The distinction between how data is accessed is fundamental for forensic "bit-by-bit" acquisition.
+
+\subsubsection*{1. Access via File System (Logical)}
+Access occurs through the \textbf{mount point} using standard OS tools (e.g., \texttt{ls}, \texttt{cp}).
+\begin{itemize}
+    \item \textbf{Pro:} Easy to navigate; metadata is managed by the OS.
+    \item \textbf{Cons:} Limited to active files; risk of metadata corruption; cannot see "unallocated" space or deleted files.
+\end{itemize}
+
+\subsubsection*{2. Direct Access (Physical/Raw)}
+Access occurs directly at the \textbf{block device} level (e.g., \texttt{/dev/sda1}).
+\begin{itemize}
+    \item \textbf{Requirement:} Requires \textbf{root/administrator} privileges.
+    \item \textbf{Functionality:} Treats the storage as unstructured blocks of data.
+    \item \textbf{Forensic Importance:} Essential for creating bit-by-bit copies and performing "data carving" (recovering deleted information) using tools like \texttt{dd} or \texttt{hexdump}.
+\end{itemize}
+
+
+
+\subsubsection{Unix Forensic Commands}
+\begin{itemize}
+    \item \texttt{lsblk / fdisk -l}: Identification of connected devices regardless of mounting status.
+    \item \texttt{mount -o ro,noexec,nosuid}: Secure mounting parameters.
+    \begin{itemize}
+        \item \textbf{ro}: Read-only access.
+        \item \textbf{noexec}: Prevents execution of binaries.
+        \item \textbf{nosuid}: Disables set-user-ID bits (prevents privilege elevation).
+    \end{itemize}
+    \item \texttt{dmesg}: Reviewing kernel messages to identify newly attached hardware.
+\end{itemize}
+
+
+\subsection{Procedures regading File System }
+
+A forensically sound environment requires a multi-layered write-protection strategy to prevent any data alteration:
+\begin{enumerate}
+    \item \textbf{Hardware Level:} Use of physical hardware write blockers to intercept write signals.
+    \item \textbf{Device Level (IOCTL):} Setting the block device to read-only using the \texttt{blockdev} utility.
+    \begin{itemize}
+        \item \texttt{blockdev --setro /dev/sdb1} (Set Read-Only)
+        \item \texttt{blockdev --getro /dev/sdb1} (Verify status)
+    \end{itemize}
+    \item \textbf{File System Level:} Mounting the partition with the \texttt{-o ro} flag.
+\end{enumerate}
+\textit{ Note:} Device-level protection overrides file system requests, ensuring that even accidental write attempts by the OS fail.
+
+\subsubsection{Disk Images}
+A \textbf{disk image} is a file containing a complete, bit-per-bit replica of a storage medium (e.g., created via \texttt{dd}).
+\begin{itemize}
+    \item Images contain everything: file structures, metadata (MFT, journals), and unallocated space.
+    \item Tools like \texttt{imount} or CAINE's \textit{UnBlock} allow investigators to mount these images and interact with them as if they were physical drives.
+\end{itemize}
+
+\subsubsection{File Attributes}
+The OS uses several attributes to manage files, but an investigator must look beyond the surface:
+\begin{itemize}
+    \item \textbf{Magic Numbers:} The first few bytes of a file that identify its true type, regardless of the filename extension. This is critical to detect renamed malicious files.
+    \item \textbf{MAC Times:} Metadata tracking Modification, Access, and Change (creation) times, essential for timeline reconstruction.
+    \item \textbf{Size vs. Physical Space:} Files are stored in blocks; accessing the device directly (\textit{Direct Access}) allows an investigator to see data hidden in "slack space" or within sub-block fragments.
+\end{itemize}
