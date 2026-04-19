@@ -1,0 +1,129 @@
+\section{File System Forensics Domain}
+
+File system forensics examines the organization and structure of file systems to retrieve hidden or deleted data. \\
+While the end-user interacts with a simplified logical layer, a forensic investigator must analyze the underlying storage to uncover information that OS no longer presents as active. 
+\bigskip
+
+\noindent
+The discrepancy between logical units presented by the OS and the actual atomic units of storage (e.g., 512 bytes vs. 4KB) allows for the recovery of residual information.
+
+\begin{itemize}
+    \item \textbf{Slack Space Analysis:} Residual data can be found in unused portions of disk sectors when a file's size does not perfectly match the allocated storage unit.
+    \item \textbf{File Carving:} The extraction of deleted files by analyzing residual data clusters independently of file system metadata.
+    \item \textbf{"Registry" and OS Configuration Analysis:} Recovering system and user activities through artifacts like the Windows Registry or Linux configuration files (e.g., \texttt{/etc}, \texttt{~/.bashrc}).
+\end{itemize}
+
+\subsubsection*{Forensic Tooling}
+Investigators utilize a combination of low-level utilities for detailed interaction and high-level frameworks for correlation and visualization[cite: 6].
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|l|p{5cm}|}
+\hline
+\textbf{Level} & \textbf{Tools} & \textbf{Primary Function} \\
+\hline
+Low-level & \texttt{stat}, \texttt{istat}, \texttt{debugfs} & Direct access to file system metadata, statistics, and block structures[cite: 4, 6]. \\
+\hline
+High-level & \textit{Autopsy}, \textit{Sleuth Kit} & Evidence aggregation, timeline reconstruction, and user-friendly analysis[cite: 4, 6, 7]. \\
+\hline
+\end{tabular}
+\caption{Classification of forensic tools based on analysis depth.}
+\end{table}
+
+\subsection{Metadata Analysis and Correlation}
+
+Metadata, defined as "data about data," provides a pervasive layer of information that is often partially or entirely hidden from the end-user.\\
+It is categorized by its source: application-level (e.g., EXIF for images, XML for documents) or file-system-level (e.g., timestamps, ownership).
+
+\subsubsection*{Forensic Utility and Reliability}
+Metadata is not trusted-by-definition. It can be manipulated by malicious users or altered by the standard behavior of applications, such as social media platforms stripping EXIF data during image processing.
+
+\begin{itemize}
+    \item \textbf{Knowledge Augmentation:} Metadata reveals hidden information such as GPS coordinates in JPEG files or creation history in ODF/DOCX documents.
+    \item \textbf{Data Correlation:} Discrepancies between application metadata (e.g., \texttt{meta.xml} in ODF) and file system timestamps serve as flags for investigation.
+    \item \textbf{Integrity Verification:} Effective analysis requires correlating data from multiple sources to identify inconsistencies provoked by accidental damage or intentional tampering.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\small,node distance=8mm,>=Latex,
+box/.style={rectangle,rounded corners,draw=black,fill=gray!10,align=center,text width=6cm,minimum height=6mm}]
+\node[box] (L1) {\textbf{Metadata Sources for Correlation}};
+\node[box,below=of L1] (L2) {\textbf{File System Layer}\\Name, Size, Ownership, Timestamps, Journaling};
+\node[box,below=of L2] (L3) {\textbf{Application Layer}\\EXIF (GPS, Camera), XML (ODF/DOCX Creators)};
+\draw[->] (L1) -- (L2);
+\draw[<->] (L2) -- (L3);
+\end{tikzpicture}
+\caption{Hierarchy of metadata layers for forensic correlation.}
+\end{figure}
+
+\subsubsection{Metadata Examples: ODF and JPEG}
+
+To understand the practical application of forensic correlation, it is essential to examine how different file formats store metadata and how these can be manipulated or recovered. 
+
+\subsubsection*{Open Document Format (ODF)}
+ODF files (e.g., \texttt{.odt}, \texttt{.docx}) are essentially compressed archives. If a file is deleted, forensic tools can often recover individual components of the ZIP structure, such as the \texttt{meta.xml} file.
+
+\begin{itemize}
+    \item \textbf{Structure:} Metadata is stored in a separate XML file within the archive.
+    \item \textbf{Key Artifacts:} Contains the initial creator, creation date, and document title.
+    \item \textbf{Forensic Value:} Discrepancies between the creation date in \texttt{meta.xml} and the file system timestamps (MAC times) serve as primary indicators of file tampering or movement between different systems.
+\end{itemize}
+
+\subsubsection*{Exchangeable Image File (EXIF)}
+EXIF is the standard for embedding metadata within image files like JPEG. It provides a rich "history" of the evidence, recording technical details from the moment of capture.
+
+\begin{itemize}
+    \item \textbf{Technical Details:} Includes hardware information (camera model), settings (ISO, focal length, resolution), and the \texttt{DateTimeOriginal} tag.
+    \item \textbf{Geolocation:} Modern devices include GPS coordinates, allowing investigators to establish a proper track of movement and location.
+    \item \textbf{Manipulation and Reliability:} Metadata is not "trusted-by-definition". Applications like WhatsApp or Telegram typically strip or manipulate EXIF data for privacy and compression, whereas sending an image via email generally preserves the original metadata.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3cm}|p{4cm}|p{3.5cm}|}
+\hline
+\textbf{Metadata Type} & \textbf{Example Artifacts} & \textbf{Forensic Insight} \\
+\hline
+\textbf{EXIF (JPEG)} & GPS, Camera Model, \texttt{DateTimeOriginal} & Device identification and location tracking. \\
+\hline
+\textbf{XML (ODF/DOCX)} & \texttt{initial-creator}, \texttt{creation-date} & Document authorship and timeline verification. \\
+\hline
+\textbf{File System} & Permissions, Size, Name, Journaling & Ownership and allocation integrity. \\
+\hline
+\end{tabular}
+\caption{Comparison of metadata artifacts across different layers.}
+\end{table}
+
+
+\subsection{Standards and Legal Frameworks}
+
+Standards provide the technical and procedural baseline for conducting investigations that are recognized globally.
+
+\begin{itemize}
+    \item \textbf{ISO/IEC 27037:} Focuses on the "identification, collection, acquisition, and preservation of digital evidence". It defines the fundamental steps to ensure that evidence is handled correctly from the start.
+    \item \textbf{ISO/IEC 27042:} Provides guidelines for the analysis and interpretation of digital evidence, ensuring that the methods used are scientifically sound.
+    \item \textbf{ACPO Guidelines:} Although originating in the UK, these guidelines established the widely accepted principles that no action taken by investigators should change the data held on a computer or storage media.
+\end{itemize}
+
+\subsubsection*{The Relationship Between ISO and GDPR}
+In the context of European investigations, the intersection of organizational security (ISO) and legal compliance (GDPR) is paramount.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{4cm}|p{4cm}|}
+\hline
+\textbf{Aspect} & \textbf{ISO/IEC 27001 / 27037} & \textbf{GDPR} \\
+\hline
+\textbf{Nature} & Process and technical standards. & Legal and regulatory framework. \\
+\hline
+\textbf{Focus} & Security, integrity, and availability of data. & Protection of personal data and rights of individuals. \\
+\hline
+\textbf{Application} & Procedural guidance for the investigator. & Legal constraints on data handling and privacy. \\
+\hline
+\end{tabular}
+\caption{Distinction between technical standards and legal frameworks in forensics.}
+\end{table}
