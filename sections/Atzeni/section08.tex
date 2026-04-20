@@ -127,3 +127,129 @@ In the context of European investigations, the intersection of organizational se
 \end{tabular}
 \caption{Distinction between technical standards and legal frameworks in forensics.}
 \end{table}
+
+
+\subsection{Evolution of Windows File Systems}
+The transition from legacy file systems like FAT32 to NTFS (\textit{New Technology File System}) was driven by the necessity for robustness, security, and performance in multi-user and server environments. While FAT lacks advanced data preservation mechanisms, NTFS adopts a database-like approach to manage storage metadata.
+
+\subsubsection*{Key Evolutionary Drivers}
+\begin{itemize}
+    \item \textbf{Robustness:} Implementation of atomic operations to prevent data corruption and inconsistent states.
+    \item \textbf{Performance:} Use of indexing and sophisticated metadata structures for efficient access to large datasets and files.
+    \item \textbf{Scalability:} Designed to overcome the volume and file size limitations inherent in FAT and HPFS.
+\end{itemize}
+
+\subsubsection{NTFS Architecture and Core Features}
+NTFS is characterized by an attribute-based file model where every file is treated as a collection of typed attributes rather than a simple byte stream. This extensibility allows for detailed metadata management and multiple data views (Alternate Data Streams).
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3cm}|p{7cm}|}
+\hline
+\textbf{Feature} & \textbf{Technical Implementation} \\
+\hline
+\textbf{Metadata Model} & Master File Table (MFT) structured as a relational database. \\
+\hline
+\textbf{Security} & Integrated Access Control Lists (ACLs) and attribute-based permissions. \\
+\hline
+\textbf{Reliability} & Write-ahead logging (\texttt{\$LogFile}) for metadata transaction journaling. \\
+\hline
+\textbf{Atomicity} & Support for roll-back mechanisms to ensure metadata consistency after system failures. \\
+\hline
+\end{tabular}
+\caption{Comparison of NTFS architectural enhancements over legacy systems.}
+\end{table}
+
+\subsubsection{The Master File Table (MFT)}
+The MFT is the heart of the NTFS volume, storing metadata for all files and directories. Each MFT entry is typically 1024 bytes in size and follows a specific internal structure.
+
+\subsubsection*{Entry Structure and Components}
+\begin{itemize}
+    \item \textbf{MFT Entry Header (42 bytes):} Contains essential information such as the record signature, sequence numbers, and pointers to the first attribute.
+    \item \textbf{Attributes:} Variable-size fields that store specific metadata (e.g., timestamps, file name, security descriptors).
+    \item \textbf{Resident vs. Non-Resident Data:} Small files or metadata can be stored directly within the MFT entry (\textit{resident}). If the data size exceeds the entry capacity, it is moved to external clusters (\textit{non-resident}), and the MFT stores a pointer (\textit{data runs}) to these locations.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\small,node distance=0mm,>=Latex,
+box/.style={rectangle,draw=black,fill=gray!10,align=center,minimum height=8mm}]
+\node[box, text width=2cm](pbs){Partition\\Boot Sector};
+\node[box, right=of pbs, text width=3cm, fill=blue!10](mft){Master File\\Table (MFT)};
+\node[box, right=of mft, text width=2.5cm](meta){Metadata\\Files};
+\node[box, right=of meta, text width=2.5cm](data){Data\\Area};
+\end{tikzpicture}
+\caption{High-level structural overview of an NTFS partition.}
+\end{figure}
+
+\subsubsection{Forensic Implications of MFT Records}
+From a digital forensics perspective, the MFT provides critical evidence regarding file activity and status. 
+
+\subsubsection*{Header Field Significance}
+\begin{itemize}
+    \item \textbf{Signature (\texttt{"FILE"}):} Identifies a valid MFT record.
+    \item \textbf{Sequence Number:} Incremented when a record is reused, allowing for the detection of deleted file traces.
+    \item \textbf{Flags:} A bitmask indicating whether the record is currently in use or has been deleted.
+\end{itemize}
+
+\subsubsection*{Deleted Data Recovery}
+When a file is deleted in NTFS, the system simply marks the MFT record and the corresponding data clusters as "not in use" by updating the flags. Although the operating system ignores these sectors via standard APIs, the raw data remains physically present on the block device until overwritten, enabling forensic recovery of the original content.
+
+
+\subsection{NTFS Attributes and Meta-data Files}
+In NTFS, every file is defined by a set of attributes stored within its MFT record. These attributes are identified by fixed-size integers defined in the \texttt{\$AttrDef} system file. While attribute names (e.g., \texttt{standard\_information}) are used for human readability, the OS relies solely on numerical identifiers for processing.
+
+\subsubsection*{Core MFT Attributes}
+\begin{itemize}
+    \item \textbf{\$STANDARD\_INFORMATION (Type 16):} Contains fundamental metadata including MAC (\textit{Modified, Accessed, Created}) timestamps and file permissions.
+    \item \textbf{\$FILE\_NAME (Type 48):} Stores the file name and a reference to the parent directory.
+    \item \textbf{\$DATA (Type 128):} Holds the actual file content. This can be resident or non-resident.
+    \item \textbf{\$ATTRIBUTE\_LIST:} Used as an overflow mechanism when a file's attributes cannot fit into a single MFT record.
+\end{itemize}
+
+\subsubsection*{NTFS System Files}
+The file system relies on hidden meta-data files for volume organization and forensic reconstruction:
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{File} & \textbf{ID} & \textbf{Forensic Relevance} \\
+\hline
+\texttt{\$MFT} & 0 & The Master File Table itself. \\
+\texttt{\$MFTMirr} & 1 & Backup of the first 4 MFT records to ensure recovery. \\
+\texttt{\$LogFile} & 2 & Transaction log used to reconstruct operations after a crash. \\
+\texttt{\$Bitmap} & 6 & Cluster usage map; vital for locating unallocated space. \\
+\texttt{\$Secure} & 9 & Contains the Access Control List (ACL) for the entire volume. \\
+\hline
+\end{tabular}
+\caption{Key NTFS system files and their forensic importance.}
+\end{table}
+
+\subsection{File Deletion and Data Recovery}
+The deletion process in NTFS is a logical operation that affects metadata without immediately wiping physical data.
+
+\subsubsection*{The Deletion Workflow}
+\begin{enumerate}
+    \item \textbf{MFT Flag Update:} The file's MFT record is marked as "not in use".
+    \item \textbf{Directory Unlinking:} The entry is removed from the parent directory's index.
+    \item \textbf{Bitmap Update:} The corresponding bits in \texttt{\$Bitmap} are set to 0, marking the clusters as available for reuse.
+\end{enumerate}
+\textit{Forensic note:} Until these clusters or the MFT record are overwritten by new data, the original content can be retrieved using \textbf{Data Carving} techniques, which scan the raw disk for specific file signatures (headers/footers).
+
+\subsection{Forensic Acquisition and Analysis Tools}
+Standard OS commands (e.g., \texttt{cp}, \texttt{copy}) are unsuitable for forensics as they alter metadata, such as access times. Forensic investigations require \textbf{bit-per-bit copies} (imaging) to preserve the original state.
+
+\subsubsection*{Bit-stream Imaging Commands}
+\begin{itemize}
+    \item \textbf{\texttt{dd}:} The standard tool for raw data cloning.
+    \item \textbf{\texttt{dcfldd} / \texttt{dc3dd}:} Forensic-grade variants that support on-the-fly hashing (MD5, SHA-256) and progress reporting to ensure data integrity during acquisition.
+\end{itemize}
+
+\subsubsection*{System-level vs. Forensic-level Analysis}
+Investigators typically compare outputs from two different command categories to identify inconsistencies or hidden data:
+\begin{itemize}
+    \item \textbf{System Tools:} Commands like \texttt{stat} (Linux) or \texttt{Get-Item} (PowerShell) interact with the OS API. They are mediated by the kernel and may be subject to manipulation (e.g., rootkits).
+    \item \textbf{Forensic Tools:} Tools from \textit{The Sleuth Kit} (e.g., \texttt{istat}, \texttt{fsutil}) bypass the OS to interact directly with the block device, exposing the low-level NTFS structures and hidden artifacts.
+\end{itemize}
