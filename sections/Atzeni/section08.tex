@@ -429,3 +429,105 @@ Data persists indefinitely in unallocated space. & A "Quick Format" can render t
 \end{tabular}
 \caption{Contrast in recovery predictability between HDD and SSD.}
 \end{table}
+
+\subsubsection*{Advanced SSD Acquisition and Data Sanitization}
+
+Beyond standard imaging, SSD forensics may require intrusive techniques to bypass the Flash Translation Layer (FTL) or access non-addressable storage areas.
+
+\subsubsection*{Advanced Acquisition Techniques}
+\begin{itemize}
+    \item \textbf{Factory Access Mode:} Temporarily disables controller background processes (Garbage Collection, Wear Leveling). It enables access to non-addressable blocks, including the over-provisioned area, using specialized hardware tools like PC-3000.
+    \item \textbf{Chip-Off Forensics:} A destructive approach where NAND chips are physically desoldered and read via a hardware programmer. This bypasses the controller entirely but is highly complex due to hardware-level encryption and the need to reverse-engineer wear-leveling maps.
+    \item \textbf{Over-Provisioning (OP) Area:} SSDs contain more physical NAND than advertised capacity to replace worn-out cells. This area may retain recently deleted data that has not yet been erased by garbage collection, accessible only via factory mode or chip-off.
+\end{itemize}
+
+\noindent
+Data sanitization ensures that information is irretrievable even against laboratory-grade attacks. The \textbf{NIST SP 800-88} standard provides a pragmatic framework for these procedures.
+
+\subsubsection*{NIST Sanitization Levels}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{9cm}|}
+\hline
+\textbf{Level} & \textbf{Description and Implementation} \\
+\hline
+\textbf{NIST Clear} & Logical techniques (e.g., overwriting) that protect against simple software-based data recovery. Media remains functional. \\
+\hline
+\textbf{NIST Purge} & Rigorous techniques (e.g., cryptographic erasure, degaussing) that protect against laboratory-grade recovery. Required for sensitive media released outside controlled environments. \\
+\hline
+\textbf{NIST Destroy} & Physical destruction (shredding, incineration, disintegration) rendering the media completely unusable and unrecoverable. \\
+\hline
+\end{tabular}
+\caption{NIST SP 800-88 Sanitization Categories.}
+\end{table}
+
+\subsubsection*{Cryptographic Erasure and SEDs}
+Self-Encrypting Drives (SEDs) implement hardware-level encryption by default. Data is encrypted at rest using a \textbf{Data Encryption Key (DEK)} stored in the controller.
+\begin{itemize}
+    \item \textbf{Mechanism:} Sanitization is achieved by destroying or changing the DEK. 
+    \item \textbf{Effectiveness:} Once the key is erased, the previously encrypted data on the NAND cells becomes indecipherable random noise. This is an extremely fast and effective "Purge" level operation.
+    \item \textbf{Prerequisite:} To prevent algorithmic recovery of the DEK, keys must be generated using a FIPS-approved \textbf{True Random Number Generator (TRNG)}.
+\end{itemize}
+
+\subsubsection*{Sanitization in Magnetic and Mobile Contexts}
+\begin{itemize}
+    \item \textbf{Degaussing:} Applicable to magnetic media (HDDs, LTO tapes). It involves applying a strong magnetic field exceeding the medium's \textbf{coercivity} to permanently destroy the magnetic properties and existing data state.
+    \item \textbf{Remote Sanitization (MDM):} Mobile Device Management platforms allow organizations to emit a "remote wipe" command. This is critical in investigations to prevent remote tampering or unauthorized data recovery from lost or stolen corporate devices.
+\end{itemize}
+
+\subsubsection*{Technical Implementation and Verification of Sanitization}
+
+While NIST provides the conceptual framework, the technical execution depends on the specific hardware interface (ATA vs. NVMe) and the physical properties of the storage medium.
+
+\subsubsection*{Specific Sanitization Methods}
+\begin{itemize}
+    \item \textbf{Overwriting:} The process of writing specific patterns (e.g., zeros or pseudorandom data) to all addressable locations. While a single pass satisfies NIST "Clear" for modern HDDs, it is not forensically sound for SSDs unless performed at the firmware level, as wear-leveling may leave original data intact in unmapped cells.
+    \item \textbf{Degaussing:} Exposing magnetic media (HDDs, LTO tapes) to a powerful electromagnetic field. This randomizes the magnetic domains, rendering the drive inoperable by destroying the factory-written servo tracks.
+    \item \textbf{Physical Destruction:} The most definitive "Destroy" method. Requirements include shredding or disintegration into particles smaller than 5 mm (or 2 mm for high-sensitivity data).
+    \item \textbf{Cryptographic Erasure (Crypto-Erase):} Destroying the encryption key to make the ciphertext computationally indistinguishable from random noise. This is ideal for Self-Encrypting Drives (SEDs) and cloud storage.
+\end{itemize}
+
+\subsubsection*{Firmware-Level Commands}
+Modern drives expose low-level commands that operate below the OS layer to ensure complete physical coverage:
+\begin{itemize}
+    \item \textbf{ATA (SATA):} Includes \texttt{Security Erase Unit} (overwrites user and reallocated sectors) and \texttt{Sanitize Block Erase} (specifically for SSD NAND dies).
+    \item \textbf{NVMe:} Implements the \texttt{NVM Express Sanitize} command, which operates at the subsystem level to ensure over-provisioned space and metadata are also sanitized.
+\end{itemize}
+
+\subsubsection*{Technique Comparison by Media Type}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Technique} & \textbf{Magnetic HDD} & \textbf{SSD / Flash} & \textbf{LTO Tape} & \textbf{Mobile} \\
+\hline
+Overwriting & Clear/Purge & Partial & Clear & N/A \\
+Crypto-Erase & SEDs only & Purge & If encrypted & iOS/Android \\
+Degaussing & Purge & Ineffective & Purge & Ineffective \\
+Physical Destruction & Destroy & Destroy & Destroy & Destroy \\
+ATA/NVMe Firmware & Purge & Purge & N/A & N/A \\
+\hline
+\end{tabular}
+\caption{Sanitization effectiveness across different media types.}
+\end{table}
+
+\subsubsection*{Verification and Certification}
+Sanitization is not forensically sound without verification. According to NIST SP 800-88, the process must be documented to maintain the chain of custody.
+
+\subsubsection*{Verification Methods}
+\begin{enumerate}
+    \item \textbf{Read Verification:} A tool reads a statistically significant sample of sectors (10\% to 100\% depending on security requirements) to confirm the overwrite pattern.
+    \item \textbf{Hash-Based Verification:} Comparing a post-sanitization cryptographic hash (SHA-256) against the expected "null-byte" hash for that drive capacity.
+    \item \textbf{Firmware Feedback:} Checking the \texttt{SANITIZE STATUS} log or status registers reported by the controller.
+\end{enumerate}
+
+\subsubsection*{Reporting and Chain of Custody}
+In legal or litigation contexts, a record must be maintained for at least three years (often more depending on industry standards). This record must include:
+\begin{itemize}
+    \item Identifying information for the device (Serial Number, Model).
+    \item The specific procedure and equipment used.
+    \item The final result of the verification pass.
+    \item The name of the individual who performed the measure (e.g., measuring particle size after disintegration).
+\end{itemize}

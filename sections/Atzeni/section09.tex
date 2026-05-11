@@ -1,0 +1,114 @@
+\section{Network Forensics}
+
+Network forensics involves the capture, recording, and analysis of network traffic to investigate security incidents or legal evidence.\\
+Unlike static file system forensics, network forensics deals with volatile data and the consequences of actions performed across digital networks.
+
+\subsection{Conceptual Overview and OSINT Integration}
+Modern investigations adopt a multimodal approach, combining traditional packet analysis with \textbf{Open Source Intelligence (OSINT)}.\\
+OSINT serves as a supplement to digital forensic data by gathering information from publicly available sources to reconstruct a suspect's digital footprint.
+
+\subsubsection*{Key OSINT Evidence Sources}
+\begin{itemize}
+    \item \textbf{Archived Snapshots:} Using tools like the \textit{Wayback Machine} to access historical versions of websites that are no longer online.
+    \item \textbf{Domain Registration:} Checking the age and ownership of domains. Recently registered domains can often be a "red flag" for malicious campaigns.
+    \item \textbf{Public Repositories and Forums:} Analyzing code leaks, forum posts, and usernames to identify affiliations or signs of compromise.
+    \item \textbf{Social Media Profiling:} Tracking activity patterns, location data from posts, and sentiment analysis to build a psychological or behavioral profile of a suspect.
+\end{itemize}
+
+\subsection{Technical Acquisition and Analysis}
+The primary objective in network forensics is the reconstruction of communication timelines. This process is often complicated by encryption (TLS, SSH, IPsec) and obfuscation.
+
+\subsubsection*{The Analysis Workflow}
+When deep packet inspection (DPI) is hindered by encryption, investigators must pivot to complementary techniques:
+\begin{enumerate}
+    \item \textbf{Lower-Layer Analysis:} Accessing metadata at the data link, network, and transport layers to identify IP addresses and connection timestamps.
+    \item \textbf{Endpoint Integration:} Accessing the host device to recover symmetric session keys, allowing for the decryption of TLS packets within tools like Wireshark.
+    \item \textbf{Pattern Recognition:} Identifying specific traffic behaviors even in the absence of clear-text content.
+\end{enumerate}
+
+\subsection{Forensic Toolset for Network Investigation}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{8.5cm}|}
+\hline
+\textbf{Tool} & \textbf{Forensic Application} \\
+\hline
+\textbf{Wireshark} & Industry standard for packet analysis and decryption using recovered session keys. \\
+\hline
+\textbf{Nmap} & Used to identify active services or "shadow servers" on a node and corroborate pcap data. \\
+\hline
+\textbf{Xplico / NetworkMiner} & Specialized in "carving" application-level data (e.g., extracting files, web pages, or emails) from network streams. \\
+\hline
+\textbf{PCAP Format} & The standard data format for storing captured packets, preserving the raw evidence for timeline reconstruction. \\
+\hline
+\end{tabular}
+\caption{Primary tools and formats in Network Forensics.}
+\end{table}
+
+\subsubsection*{Location and Identity Inference}
+Metadata such as the assigned IP address can be used to derive a restricted geographical zone for a physical location. By correlating interaction times and active connections, a network forensic investigator can reconstruct a precise timeline of an individual's digital actions, providing a "gold mine" of clues for sound fact reconstruction.
+
+\subsection{Network Forensic Phases: Preservation to Reporting}
+
+The lifecycle of a network forensic investigation ensures that volatile network data is captured, analyzed for patterns, and documented in a manner that remains defensible in legal contexts.
+
+\subsubsection{Data Preservation and Snapshots}
+Because network information is often outside the investigator's direct control (residing on ISP or third-party servers), data can be modified, moved, or deleted at any time.
+
+\subsubsection*{Methodology for Admissibility}
+To preserve the "original state" of network evidence for court use, investigators must adopt snapshot-driven tools that:
+\begin{itemize}
+    \item \textbf{Capture Snapshots:} Generate immediate captures of web archives, social media posts, and public repositories.
+    \item \textbf{Digital Signing:} Apply cryptographic signatures and timestamps to verify that the information existed in that specific state at that specific time.
+    \item \textbf{Metadata Retrieval:} Replicate associated metadata (IP headers, server logs) to provide a verifiable chain of evidence.
+\end{itemize}
+
+\subsubsection{Evidence Analysis and Relationship Mapping}
+The analysis phase focuses on identifying relationships between disparate digital artifacts and reconstructing the attack timeline.
+
+\subsubsection*{Conceptual Correlation Graphs}
+Analysis typically involves the creation of a graph-based model to identify connections between:
+\begin{itemize}
+    \item \textbf{Entities:} Relationships between individuals, usernames, and physical locations.
+    \item \textbf{Network Artifacts:} Correlation of IP addresses, domain names, and email metadata.
+    \item \textbf{Attack Vectors:} Tracing the origin of a digital incident (e.g., distinguishing between a legitimate email and a forged bot-generated spam campaign).
+\end{itemize}
+
+\noindent
+This process often requires cooperation with third parties, such as network administrators or service providers, to access restricted metadata and identify patterns of malicious behavior.
+
+\subsubsection{Reporting and OSINT Integration}
+The reporting phase translates complex technical findings into a comprehensive, defensible document for a target audience.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
+\hline
+\textbf{Report Component} & \textbf{Contribution of OSINT and Visualization} \\
+\hline
+\textbf{Timeline Reconstruction} & Corroborating network traces with public timestamps (e.g., forum posts, social media activity). \\
+\hline
+\textbf{Network Maps} & Visualizing the geographical and logical flow of communication using IP geolocation. \\
+\hline
+\textbf{Attribution Analysis} & Linking digital identities to real-world organizations using domain registration data and public profiles. \\
+\hline
+\end{tabular}
+\caption{Key elements of a comprehensive forensic report.}
+\end{table}
+
+\subsubsection{Practical Application: IP Geolocation (OSINT)}
+A common forensic task is narrowing down the geographical location of a node or user using public databases.
+
+\subsubsection*{Contextual IP Tools}
+Tools such as \textbf{IPinfo}, \textbf{ip-api.com}, and \textbf{MaxMind GeoIP} allow investigators to immediately retrieve:
+\begin{itemize}
+    \item \textbf{Geographical Data:} City, region, and approximate GPS coordinates.
+    \item \textbf{Organization Data:} ASN (Autonomous System Number) and the hosting provider or ISP.
+    \item \textbf{Security Posture:} Identifying if an IP is associated with a VPN, proxy, or Tor exit node.
+\end{itemize}
+
+
+\noindent
+By correlating a suspect's public terminal address with known organizational databases (e.g., Politecnico di Torino), investigators can verify the physical location of a device with high reliability, forming the foundation for further investigation into digital footprints.
