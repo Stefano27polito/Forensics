@@ -253,3 +253,179 @@ Investigators typically compare outputs from two different command categories to
     \item \textbf{System Tools:} Commands like \texttt{stat} (Linux) or \texttt{Get-Item} (PowerShell) interact with the OS API. They are mediated by the kernel and may be subject to manipulation (e.g., rootkits).
     \item \textbf{Forensic Tools:} Tools from \textit{The Sleuth Kit} (e.g., \texttt{istat}, \texttt{fsutil}) bypass the OS to interact directly with the block device, exposing the low-level NTFS structures and hidden artifacts.
 \end{itemize}
+
+\subsection{File Identification and Metadata Integrity}
+Reliable file identification must bypass the file extension, as it represents a highly mutable metadata field that can be easily manipulated to deceive system APIs and end-users.
+
+\subsubsection*{File Signatures and Magic Bytes}
+Forensic identification relies on analyzing the file's binary content, specifically the "magic bytes" located in the header. By comparing the declared extension with a hexadecimal dump of the file's first bytes, investigators can detect obfuscation attempts.
+\begin{itemize}
+    \item \textbf{Example:} A file renamed with a \texttt{.txt} extension but starting with the hex sequence \texttt{47 49 46 38} (ASCII for GIF8) is identified as a GIF image.
+\end{itemize}
+
+\subsubsection*{Application-Level Metadata}
+Beyond file-system metadata (MAC times, permissions), forensic analysts utilize specialized tools such as \textbf{ExifTool}. This allows access to application-specific metadata (EXIF, IPTC, XMP), which may contain critical investigative artifacts like GPS coordinates, device models, and software processing history.
+
+\subsection{Slack Space and Physical Storage Analysis}
+The concept of \textit{slack space} arises from the discrepancy between the logical size of a file and the physical allocation units used by the file system.
+
+\subsubsection*{Physical vs. Logical Interpretation}
+Storage media are organized into fixed-size units called \textbf{sectors} (typically 512 bytes or 4 KB). When a file's size is not a multiple of the sector size, the remaining space in the final allocated sector constitutes the slack space.
+\begin{itemize}
+    \item \textbf{Scenario:} A 392-byte file stored in a 512-byte sector results in 120 bytes of slack space.
+\end{itemize}
+
+\subsubsection*{Forensic Relevance and Data Carving}
+Slack space is a "dynamic entity" and serves as a primary source of residual evidence:
+\begin{itemize}
+    \item \textbf{Data Persistence:} If a file is deleted and then overwritten by a smaller file, portions of the original file's data may survive within the slack space of the new file.
+    \item \textbf{Data Carving:} Carving techniques ignore file system metadata—which might report sectors as "unallocated"—and scan raw block device bytes directly to identify file signatures and orphaned data fragments.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\small,>=Latex]
+% Sector box
+\draw[thick] (0,0) rectangle (8,1);
+\node at (4,1.3) {Physical Sector (512 Bytes)};
+
+% File data (Logical)
+\fill[blue!20] (0.02,0.02) rectangle (5,0.98);
+\node at (2.5,0.5) {Logical File Data (392 B)};
+
+% Slack space
+\fill[red!20] (5,0.02) rectangle (7.98,0.98);
+\node at (6.5,0.5) {Slack Space (120 B)};
+
+% Indicators
+\draw[<->] (0,-0.3) -- (5,-0.3) node[midway, below] {End of Logical Data};
+\draw[<->] (5,-0.3) -- (8,-0.3) node[midway, below] {End of Sector};
+\end{tikzpicture}
+\caption{Conceptual representation of Slack Space in a physical sector.}
+\end{figure}
+
+\subsection{Data Recovery and Sanitization Processes}
+
+\subsubsection{Multilevel Recovery Framework}
+Data recovery in digital forensics follows a multi-angled approach, utilizing both metadata structures and raw data analysis. The investigation is typically categorized into three analytical levels:
+\begin{itemize}
+    \item \textbf{User Level:} Interaction with allocated files and the standard "recycle bin" or trash logic.
+    \item \textbf{File System Level:} Analysis of metadata structures (e.g., the Master File Table in NTFS) to recover unallocated or "orphaned" files that the OS no longer tracks but whose metadata remains intact.
+    \item \textbf{Unit Level (Physical):} Direct examination of slack space and unallocated clusters. This level identifies discrepancies between logical and physical units to find residual data remnants.
+\end{itemize}
+
+\subsubsection{Data Carving and Hexadecimal Analysis}
+When metadata is corrupted or missing (e.g., after a quick format), investigators rely on \textbf{Data Carving}.\\
+This technique scans the raw block device for specific file signatures (headers and footers) without relying on the file system's hierarchy.
+
+\subsubsection*{Hexadecimal Examination Tools}
+For manual verification of file signatures and metadata discrepancies, hexadecimal editors are utilized:
+\begin{itemize}
+    \item \textbf{\texttt{hexdump}:} A command-line utility for displaying file contents in various formats (defaulting to hex).
+    \item \textbf{\texttt{hexedit}:} A terminal-based editor for viewing and modifying hexadecimal data.
+    \item \textbf{\texttt{ghex}:} A graphical (GNOME) editor for loading and examining files in hex and ASCII simultaneously.
+\end{itemize}
+
+\subsubsection*{Automated Carving Tools}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{2.5cm}|p{8cm}|}
+\hline
+\textbf{Tool} & \textbf{Core Functionality and Forensic Approach} \\
+\hline
+\textbf{Foremost} & A command-line tool that "carves" disk images based on internal headers/footers. It focuses on reconstructing specific file types from an input image. \\
+\hline
+\textbf{PhotoRec} & Bypasses the file system to scan the storage medium directly. Highly effective for damaged/formatted media; it provides a more robust output by verifying file integrity during recovery. \\
+\hline
+\end{tabular}
+\caption{Comparison of industry-standard data carving utilities.}
+\end{table}
+
+\subsubsection{Data Sanitization and Secure Erasure}
+Forensic investigation is also concerned with \textbf{Data Sanitization} (the process of ensuring that information is unrecoverable). \\
+This is critical for preventing sensitive data leakage during hardware disposal or protecting systems from persistent malware hiding in slack space.
+
+\subsubsection*{Military-Grade Sanitization Procedures}
+Simple formatting or file deletion is insufficient to prevent recovery by advanced sensors. High-security environments implement multi-pass overwrite procedures to neutralize residual magnetic fields:
+\begin{enumerate}
+    \item \textbf{First Pass:} Overwriting the entire storage area with zeros.
+    \item \textbf{Second Pass:} Overwriting the entire area with ones.
+    \item \textbf{Third Pass:} Overwriting with random bit patterns.
+\end{enumerate}
+Each step includes a verification phase to ensure the write was successful, effectively closing the data lifecycle and making forensic reconstruction physically impossible.
+
+\subsubsection{HDD vs SSD}
+
+The core challenge in SSD forensics stems from the departure from deterministic physical addressing. 
+
+\subsubsection*{Fundamental Differences}
+\begin{itemize}
+    \item \textbf{HDD (Sequential, Stable Addressing):} Maps each Logical Block Address (LBA) to a fixed, stable physical location on a rotating platter. The physical location of a data block remains persistent over time.
+    \item \textbf{SSD (The FTL Indirection Layer):} Implements a \textbf{Flash Translation Layer (FTL)}. This firmware layer acts as an intermediary, mapping logical addresses onto NAND cells. Because NAND cells have a limited lifespan, the FTL continuously migrates data to ensure even wear, breaking the static link between a logical file address and a physical location.
+\end{itemize}
+
+\noindent
+Unlike HDDs, SSDs perform autonomous background operations that can alter evidence after a device has been seized.
+
+\subsubsection*{1. TRIM}
+A command issued by the OS upon file deletion or formatting. It informs the SSD that specific LBAs are no longer in use, triggering the internal garbage collection process. Notably, TRIM operations can continue even after the device is powered off and resumed.
+
+\subsubsection*{2. Autonomous Garbage Collection}
+The SSD microcontroller performs background read/write operations to consolidate data and free up blocks. This process occurs independently of the host PC and can overwrite deleted data without any external command.
+
+\subsubsection*{3. Wear Leveling}
+To prevent premature cell fatigue, the FTL relocates data across the drive. This makes the physical location of data unpredictable and means that a file's content may move between cells even if the user does not modify the file.
+
+\subsubsection*{TRIM Variants and Read Behaviors}
+The SATA standard defines three distinct behaviors for data access following a TRIM command, which determines the feasibility of recovery:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Variant} & \textbf{Post-TRIM Read Behavior} \\
+\hline
+\textbf{Non-Deterministic} & Subsequent reads return unpredictable data. \\
+\hline
+\textbf{DRAT (Deterministic)} & Read After TRIM returns deterministic data defined by the manufacturer (e.g., specific bit patterns). \\
+\hline
+\textbf{DZAT (Deterministic)} & Deterministic Zeroes After TRIM returns a sequence of zeroes, effectively masking the original content immediately. \\
+\hline
+\end{tabular}
+\caption{SATA TRIM read-after-delete behaviors.}
+\end{table}
+
+\noindent
+The internal intelligence of SSDs compromises traditional forensic protocols.
+
+\subsubsection*{The Write Blocker Problem}
+Hardware write blockers are designed to intercept host commands. However, they cannot stop the \textbf{internal microcontroller} of the SSD from performing garbage collection or wear leveling. Consequently, the state of the NAND cells can change even while the drive is connected to a professional write blocker.
+
+\subsubsection*{Hash Integrity: Logical vs. Physical}
+While the underlying physical cells are in "constant flux" due to wear leveling, the FTL maintains a consistent \textbf{logical view} for the OS. 
+\begin{itemize}
+    \item \textbf{Logical Stability:} Repeatedly hashing a drive will usually yield consistent values because the FTL maps the LBAs to the same data, even if the data has moved physically.
+    \item \textbf{Physical Flux:} The underlying NAND mapping may be entirely different between sessions, meaning a hash confirms logical-layer stability only.
+\end{itemize}
+
+\subsubsection*{Comparison: Deleted Data Recovery}
+The predictability of data recovery is drastically reduced in the presence of SSD technology.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{5cm}|p{5cm}|}
+\hline
+\textbf{HDD Recovery} & \textbf{SSD Recovery} \\
+\hline
+Highly predictable; data remains at fixed physical locations until overwritten. & Highly variable; subject to FTL and TRIM implementation. \\
+\hline
+Standardized file carving techniques are reliable. & With TRIM enabled, recovery rates often drop to 0\%. \\
+\hline
+Data persists indefinitely in unallocated space. & A "Quick Format" can render the entire drive unrecoverable within minutes. \\
+\hline
+\end{tabular}
+\caption{Contrast in recovery predictability between HDD and SSD.}
+\end{table}
