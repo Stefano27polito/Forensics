@@ -1,0 +1,119 @@
+\section{OS Forensics}
+
+Operating System Forensics covers the extraction and analysis of architectural artifacts left by the OS kernel, system services, and user-space management applications.\\ This analysis establishes system states, user execution history, and structural interactions with block devices or peripheral networks.
+
+\subsection{Volatile Memory Forensics}
+
+Memory forensics involves the capture and programmatic triage of volatile Random Access Memory (RAM). Unlike persistent file system storage, volatile memory contains runtime artifacts that are completely lost upon a system power cycle or reboot, making live or cold-boot acquisition a critical investigative priority.
+
+\subsubsection*{The Ingestion and Capture Lifecycle}
+Because RAM is in a state of constant flux due to kernel-level scheduling and process executions, acquisition must occur using atomic, low-footprint procedures.
+\begin{itemize}
+    \item \textbf{Live Acquisition Frameworks:} Utilities running within user or kernel space (e.g., \texttt{LiME} for Linux, \texttt{FTK Imager Lite} or \texttt{DumpIt} for Windows) copy the physical memory space into a raw dump or advanced crash-dump format over an encrypted, unbuffered boundary.
+    \item \textbf{Hardware-Level Interception:} Using Direct Memory Access (DMA) attacks over hardware interfaces (e.g., Thunderbolt) to completely bypass OS-level instrumentation and rootkits.
+\end{itemize}
+
+\subsubsection*{Runtime Artifact Triage and Structural Categories}
+Once a volatile memory dump is secured, investigators analyze its binary structure using advanced parsing frameworks like \textbf{Volatility} to extract high-fidelity runtime artifacts.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|p{8.5cm}|}
+\hline
+\textbf{Artifact Category} & \textbf{Investigative Utility and Forensic Footprint} \\
+\hline
+\textbf{Active Process Trees} & Maps active and terminated process structures (\texttt{EPROCESS} blocks in Windows), uncovering unlinked or hidden child tasks associated with fileless malware. \\
+\hline
+\textbf{Network Sockets} & Exposes open TCP/UDP connections, bound listening ports, and historical sockets, providing an empirical link to Command and Control (C2) domains. \\
+\hline
+\textbf{Encryption Keys} & Extracts cleartext symmetric keys (AES, BitLocker) and asymmetric keys (RSA, TLS session tokens) directly from kernel or application memory spaces. \\
+\hline
+\textbf{Cached File Handles} & Enumerates files opened by active processes, capturing volatile data remnants before they are committed to persistent disk journals. \\
+\hline
+\end{tabular}
+\caption{Classification of key volatile memory artifacts.}
+\end{table}
+
+\subsection{Persistent OS Artifacts and Configuration Repositories}
+
+Persistent artifacts remain intact across reboots within specific file system locations, system registries, or specialized databases, forming the baseline for post-mortem digital investigations.
+
+\subsubsection*{The Windows Registry Architecture}
+The registry acts as a centralized database for OS configurations, user preferences, and hardware properties. It is structured hierarchically into binary files called \textbf{hives}.
+\begin{itemize}
+    \item \textbf{SYSTEM / SAM Hives:} Contains machine security configurations, hardware definitions, and localized user password hashes.
+    \item \textbf{NTUSER.DAT / USRCLASS.DAT:} User-specific hives located within individual profile directories. They hold execution histories, recently accessed file lists (MRU), and desktop environment settings.
+\end{itemize}
+
+\subsubsection*{User Activity and Execution Evidence}
+To establish user intent and reconstruct an event timeline, investigators query specialized system tracking structures:
+\begin{itemize}
+    \item \textbf{Prefetch Files (\texttt{.pf}):} Designed to optimize application launch times. Prefetch files capture the application execution history, execution timestamps, volume serial numbers, and a list of dependent DLL files.
+    \item \textbf{Shimcache (AppNameCache):} A kernel-level caching mechanism used to track application compatibility properties. It records file names, paths, sizes, and the last modification time of executed binaries.
+    \item \textbf{Amcache:} A hive file that records detailed metadata regarding application installations and executions, capturing SHA-1 file hashes and path strings even if the underlying binary has been deleted from disk.
+\end{itemize}
+
+\subsubsection*{System Event Logs}
+Centralized logging daemons record application, security, and administrative operations. In Windows environments, these are managed as binary \textbf{EVTX} files.
+\begin{itemize}
+    \item \textbf{Security Log (Event ID 4624/4625):} Logs successful and failed authentication attempts, recording the logon type (e.g., interactive, network, RDP), target username, and source IP address.
+    \item \textbf{System/Application Logs:} Captures service state modifications, driver errors, hardware connections, and critical software crashes.
+\end{itemize}
+
+\subsection{Linux and Unix Persistent OS Artifacts}
+
+Unlike the centralized registry structure of Windows, Linux and Unix-like operating systems adhere strictly to the "everything is a file" philosophy. System configurations, user activities, and operational states are distributed across standardized text files and system logging directories.
+
+\subsubsection*{The Pluggable Authentication Modules (PAM) and Account Security}
+Authentication mechanisms and account configurations are managed globally within the \texttt{/etc} configuration directory.
+\begin{itemize}
+    \item \textbf{\texttt{/etc/passwd}:} Contains essential user account information, listing usernames, user IDs (UID), group IDs (GID), home directory paths, and the default command-line shell interface.
+    \item \textbf{\texttt{/etc/shadow}:} A restricted system file that stores encrypted user password hashes alongside account aging parameters. Access requires root privileges, making its integrity a primary focus during post-compromise triage.
+    \item \textbf{\texttt{/etc/pam.d/}:} Houses configuration rules for the PAM framework. Investigators audit these files to identify unauthorized modifications, such as backdoor modules allowing password bypass or unauthorized privilege elevation.
+\end{itemize}
+
+\subsubsection*{Chronological Command Execution and Shell History}
+Reconstructing user interaction timelines requires parsing volatile and semi-persistent command-line history logs.
+\begin{itemize}
+    \item \textbf{\texttt{.bash\_history} / \texttt{.zsh\_history}:} Hidden files located within each user's home directory that record executed commands sequentially.
+    \item \textbf{Forensic Limitations:} By default, command history files are only updated upon clean shell termination and do not inherently include execution timestamps. Furthermore, attackers can easily disable or manipulate history tracking via environment variables (e.g., \texttt{unset HISTFILE} or setting \texttt{HISTCONTROL=ignorespace}).
+\end{itemize}
+
+\subsubsection*{Persistence Mechanisms: Scheduled Tasks and Startup Daemons}
+Malware achieves persistence on Linux systems by integrating malicious execution paths into automation hooks and system initialization frameworks.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|p{8.5cm}|}
+\hline
+\textbf{Persistence Mechanism} & \textbf{Forensic Inspection Paths and Behavior} \\
+\hline
+\textbf{Cron Jobs} & Auditing \texttt{/etc/crontab}, \texttt{/etc/cron.*/}, and individual user crontabs via \texttt{/var/spool/cron/}. These files schedule periodic background scripts and command executions. \\
+\hline
+\textbf{Systemd Daemons} & Inspecting unit files within \texttt{/etc/systemd/system/} and \texttt{/lib/systemd/system/}. Systemd manages background services, allowing malicious binaries to start automatically at boot with high privileges. \\
+\hline
+\textbf{Shell Profiles} & Reviewing global and local rc files (\texttt{/etc/profile}, \texttt{\textasciitilde/.bashrc}, \texttt{\textasciitilde/.zshrc}). Malicious commands embedded here execute automatically every time a targeted user spawns a new shell session. \\
+\hline
+\end{tabular}
+\caption{Primary Linux persistence mechanism vectors and forensic audit paths.}
+\end{table}
+
+\subsubsection*{The syslog Architecture and Centralized Logging}
+The standard logging infrastructure on Unix-like environments aggregates system, kernel, and application messages into centralized, plain-text files located within the \texttt{/var/log/} directory.
+
+\begin{itemize}
+    \item \textbf{\texttt{/var/log/auth.log} (or \texttt{secure}):} Records authentication states, capturing remote connection traces (e.g., SSH logons), privilege elevations via \texttt{sudo}, and local account modifications.
+    \item \textbf{\texttt{/var/log/syslog} (or \texttt{messages}):} Serves as a global repository for non-critical system components, including daemon start/stop cycles, device attachments, and runtime application errors.
+    \item \textbf{Log Rotation and Ingestion:} System logs are periodically rotated (compressed into \texttt{.gz} format) via the \texttt{logrotate} facility. This behavior leaves historical compressed log fragments behind, which can yield vital historical evidence during deep disk analysis.
+\end{itemize}
+
+\subsubsection*{Binary State Accounting: wtmp, utmp, and btmp}
+To optimize access speeds and prevent system logs from inflating rapidly, connection states are recorded within structured, fixed-size binary data files that cannot be edited via standard text editors.
+\begin{itemize}
+    \item \textbf{\texttt{utmp}:} Maintains real-time tracking of currently authenticated users, their bound terminal endpoints, and their source IP addresses.
+    \item \textbf{\texttt{wtmp}:} Acts as a historical ledger, recording an append-only archive of all successful user logins, logouts, and system boot/reboot timestamps.
+    \item \textbf{\texttt{btmp}:} Records historical data for failed authentication attempts, serving as a primary telemetry source for identifying automated brute-force attacks or scanning patterns.
+    \item \textbf{Analytical Verification:} These binary files are queried using specialized operating system utilities such as \texttt{last}, \texttt{lastb}, or \texttt{who}, bypassable only if an attacker manually zeros out or deletes the underlying data structures.
+\end{itemize}
