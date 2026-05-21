@@ -176,6 +176,7 @@ In advanced scenarios, volatile memory may even be preserved using specialized t
 
 During the collection phase, all actions must be carefully documented as part of the chain of custody.\\
 
+\noindent
 This documentation typically includes:
 
 \begin{itemize}
@@ -243,10 +244,6 @@ This approach minimizes interaction with the system and is typically preferred w
 
 \noindent
 However, static acquisition may not always be appropriate. If relevant data is located in volatile sources the \textbf{live acquisition} may be necessary.
-\medskip
-
-\noindent
-In order to perform the acquisation phase, investigators use trust tools and.\\
 
 \subsubsection{Documentation and Evidence Integrity}
 
@@ -267,11 +264,11 @@ Throughout the acquisition phase, the \textbf{chain of custody} must be carefull
 \subsubsection{Example USB Acquisition}
 
 Consider a simplified scenario where an employee is suspected of exfiltrating sensitive financial spreadsheets using a \textbf{USB flash drive}.\\
-The investigation therefore focuses on acquiring the USB device in a forensically sound way.
+The investigation therefore focuses on acquiring the USB device.
 \medskip
 
 \noindent
-\textbf{Preparation}\\
+\textbf{1. Preparation}\\
 Before acquisition, the device must be clearly identified and documented:
 
 \begin{itemize}
@@ -289,7 +286,7 @@ The investigator prepares:
 \end{itemize}
 
 \noindent
-\textbf{Acquisition Procedure}
+\textbf{2. Acquisition Procedure}
 
 \begin{enumerate}
 \item Connect the USB drive through the \textbf{write blocker}
@@ -320,13 +317,13 @@ dc3dd if=/dev/sdb of=USB_image.dd hash=sha256 log=USB_image.log
 \end{verbatim}
 
 \noindent
-\textbf{Integrity Verification}\\
+\textbf{3. Integrity Verification}\\
 \noindent
 After imaging, the hash of the image is compared with the original digest to confirm integrity.
 \medskip
 
 \noindent
-\textbf{Documentation}\\
+\textbf{4. Documentation}\\
 \noindent
 The chain of custody must include:
 

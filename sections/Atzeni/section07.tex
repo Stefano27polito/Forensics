@@ -1,16 +1,23 @@
 \section{Hardware Abstraction and Data Access}
 
-In the context of a "sound and admissible" investigation, Prof. Atzeni highlights the critical transition from high-level OS metaphors to low-level hardware interaction.
+\begin{quotation}
+    \textit{\textbf{Author's note:} This section will be MORE technical.\\
+    For students who are studyng with my notes, I suggest to read it carefully.\\
+    Moreover, I \underline{think} (PERSONAL OPINION) that it is just an overview and it is not necessary to momorize all the details, eg. the command line examples.} 
+\end{quotation}
+
+\noindent
+In the context of a "sound and admissible" investigation, Prof. Atzeni highlights the critical transition from high-level OS to low-level hardware interaction.
 
 \subsection{The File System and Mounting Risks}
-OS provides a simplified interface to interact with storage  (files and folders), this abstraction presents specific forensic risks during the \textbf{mounting} process:
+OS provides a simplified interface (files and folders)to interact with storage, this abstraction presents specific forensic risks during the \textbf{mounting} process:
 \begin{itemize}
     \item \textbf{Automatic Alteration:} modern OS may automatically update metadata (e.g., last access time) or attempt to repair file system inconsistencies upon mounting, potentially destroying evidence.
     \item \textbf{Forensic Precaution:} an investigator must ensure the device is mounted in \textbf{read-only} mode at both the file system and block device levels to maintain data integrity.
 \end{itemize}
 
 \subsection{Unix Device Taxonomy}
-Under Unix-derived systems, hardware is abstracted as files within the \texttt{/dev} directory. Prof. Atzeni classifies these into several categories:
+Under Unix-derived systems, hardware is abstracted as files within the \texttt{/dev} directory.
 
 \begin{table}[h!]
 \centering

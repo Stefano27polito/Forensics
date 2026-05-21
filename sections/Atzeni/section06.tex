@@ -7,7 +7,7 @@ For this reason, it become essential the defense in depth paradigm.
 Operational security is structured into multiple, redundant layers. This strategy ensures that the failure of a single control point (e.g., a firewall) does not lead to a total system compromise.
 \begin{itemize}
     \item \textbf{Layered Structure:} The protection extends from the \textbf{Data} core outwards through \textbf{Applications}, \textbf{Hosts}, \textbf{Network}, and finally the \textbf{Physical/Perimeter} layer.
-    \item \textbf{The Human Factor:} The user is identified as the outermost and often weakest layer, requiring a balance between technical controls and awareness training.
+    \item \textbf{The Human Factor:} The user is identified as weakest layer, requiring a balance between technical controls and awareness training.
 \end{itemize}
 
 \subsection{Operational Monitoring and Log Management}
@@ -29,19 +29,6 @@ Even if a system is monitored and protected, it is inevitable that some attacks 
     \end{itemize}
 \end{itemize}
 
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[font=\small,node distance=6mm,>=Latex,
-box/.style={rectangle,rounded corners,draw=black,fill=gray!10,align=center,text width=5cm,minimum height=6mm}]
-\node[box] (event) {\textbf{Disruptive Event}\\System Failure / Attack};
-\node[box, below=of event] (dr) {\textbf{Disaster Recovery}\\Technical Restoration};
-\node[box, below=of dr, fill=blue!5] (bc) {\textbf{Business Continuity}\\Service Resumption};
-
-\draw[->] (event) -- (dr);
-\draw[->] (dr) -- node[right]{Restoration of Assets} (bc);
-\end{tikzpicture}
-\caption{The relationship between technical recovery (DR) and business stability (BC).}
-\end{figure}
 
 \noindent
 A proactive stance requires the continuous identification of threats.
@@ -59,14 +46,15 @@ The technical framework for risk management follows a structured, iterative proc
 The first phase involves mapping the surface area of the organization:
 \begin{itemize}
     \item \textbf{Asset Inventory:} Differentiation between \textbf{Primary Assets} (core business processes and information) and \textbf{Supporting Assets} (infrastructure, software, personnel, sites).
-    \item \textbf{Vulnerability Mapping:} Identifying technical or organizational weaknesses (e.g., unpatched software, lack of physical access control) that could be exploited by a threat.
+    \item \textbf{Vulnerability Mapping:} Identifying technical or organizational weaknesses that could be exploited by a threat.
 \end{itemize}
 
 \subsubsection*{2. Risk Evaluation: Impact and Likelihood}
 Risk is not a static value but a function of two variables:
 \begin{enumerate}
     \item \textbf{Likelihood (Probability):} Evaluated based on historical data, threat intelligence, and the asset's attractiveness to attackers.
-    \item \textbf{Impact (Consequence):} Measured across the \textbf{CIA triad} (Confidentiality, Integrity, Availability). Prof. Atzeni emphasizes that impact is weighted by the criticality of the primary asset.
+    \item \textbf{Impact (Consequence):} Measured across the \textbf{CIA triad}. \\
+    \textit{Prof. Atzeni emphasizes that impact is weighted by the criticality of the primary asset.}
 \end{enumerate}
 
 \subsubsection*{3. The Risk Matrix and Treatment Strategies}
