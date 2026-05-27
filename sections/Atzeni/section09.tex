@@ -3,9 +3,9 @@
 Network forensics involves the capture, recording, and analysis of network traffic to investigate security incidents or legal evidence.\\
 Unlike static file system forensics, network forensics deals with volatile data and the consequences of actions performed across digital networks.
 
-\subsection{Conceptual Overview and OSINT Integration}
-Modern investigations adopt a multimodal approach, combining traditional packet analysis with \textbf{Open Source Intelligence (OSINT)}.\\
-OSINT serves as a supplement to digital forensic data by gathering information from publicly available sources to reconstruct a suspect's digital footprint.
+\subsection{OSINT Integration}
+Modern investigations adopt a multi approach, combining traditional packet analysis with \textbf{Open Source Intelligence (OSINT)}.\\
+OSINT serves as a supplement to digital forensic data by gathering information from publicly available sources to reconstruct a suspect's digital fingerprint.
 
 \subsubsection*{Key OSINT Evidence Sources}
 \begin{itemize}
@@ -18,15 +18,15 @@ OSINT serves as a supplement to digital forensic data by gathering information f
 \subsection{Technical Acquisition and Analysis}
 The primary objective in network forensics is the reconstruction of communication timelines. This process is often complicated by encryption (TLS, SSH, IPsec) and obfuscation.
 
-\subsubsection*{The Analysis Workflow}
-When deep packet inspection (DPI) is hindered by encryption, investigators must pivot to complementary techniques:
+\subsubsection*{Analysis Workflow}
+When deep packet inspection (DPI) is under encryption, investigators must use to complementary techniques:
 \begin{enumerate}
     \item \textbf{Lower-Layer Analysis:} Accessing metadata at the data link, network, and transport layers to identify IP addresses and connection timestamps.
-    \item \textbf{Endpoint Integration:} Accessing the host device to recover symmetric session keys, allowing for the decryption of TLS packets within tools like Wireshark.
+    \item \textbf{Endpoint Integration:} Accessing the host device to recover symmetric session keys, allowing for the decryption of TLS packets with tools like Wireshark.
     \item \textbf{Pattern Recognition:} Identifying specific traffic behaviors even in the absence of clear-text content.
 \end{enumerate}
 
-\subsection{Forensic Toolset for Network Investigation}
+\subsubsection{Tool for Network Investigation}
 \begin{table}[H]
 \centering
 \small
@@ -46,10 +46,7 @@ When deep packet inspection (DPI) is hindered by encryption, investigators must 
 \caption{Primary tools and formats in Network Forensics.}
 \end{table}
 
-\subsubsection*{Location and Identity Inference}
-Metadata such as the assigned IP address can be used to derive a restricted geographical zone for a physical location. By correlating interaction times and active connections, a network forensic investigator can reconstruct a precise timeline of an individual's digital actions, providing a "gold mine" of clues for sound fact reconstruction.
-
-\subsection{Network Forensic Phases: Preservation to Reporting}
+\subsection{Network Forensic Phases}
 
 The lifecycle of a network forensic investigation ensures that volatile network data is captured, analyzed for patterns, and documented in a manner that remains defensible in legal contexts.
 
@@ -57,7 +54,7 @@ The lifecycle of a network forensic investigation ensures that volatile network 
 Because network information is often outside the investigator's direct control (residing on ISP or third-party servers), data can be modified, moved, or deleted at any time.
 
 \subsubsection*{Methodology for Admissibility}
-To preserve the "original state" of network evidence for court use, investigators must adopt snapshot-driven tools that:
+To preserve the "original state" of network evidence for legal use, investigators must adopt snapshot-driven tools that:
 \begin{itemize}
     \item \textbf{Capture Snapshots:} Generate immediate captures of web archives, social media posts, and public repositories.
     \item \textbf{Digital Signing:} Apply cryptographic signatures and timestamps to verify that the information existed in that specific state at that specific time.
@@ -67,8 +64,8 @@ To preserve the "original state" of network evidence for court use, investigator
 \subsubsection{Evidence Analysis and Relationship Mapping}
 The analysis phase focuses on identifying relationships between disparate digital artifacts and reconstructing the attack timeline.
 
-\subsubsection*{Conceptual Correlation Graphs}
-Analysis typically involves the creation of a graph-based model to identify connections between:
+\subsubsection*{Correlation Graphs}
+Analysis typically involves the creation of a graph model to identify connections between:
 \begin{itemize}
     \item \textbf{Entities:} Relationships between individuals, usernames, and physical locations.
     \item \textbf{Network Artifacts:} Correlation of IP addresses, domain names, and email metadata.
@@ -78,48 +75,25 @@ Analysis typically involves the creation of a graph-based model to identify conn
 \noindent
 This process often requires cooperation with third parties, such as network administrators or service providers, to access restricted metadata and identify patterns of malicious behavior.
 
-\subsubsection{Reporting and OSINT Integration}
-The reporting phase translates complex technical findings into a comprehensive, defensible document for a target audience.
-
-\begin{table}[H]
-\centering
-\small
-\begin{tabular}{|p{3.5cm}|p{8cm}|}
-\hline
-\textbf{Report Component} & \textbf{Contribution of OSINT and Visualization} \\
-\hline
-\textbf{Timeline Reconstruction} & Corroborating network traces with public timestamps (e.g., forum posts, social media activity). \\
-\hline
-\textbf{Network Maps} & Visualizing the geographical and logical flow of communication using IP geolocation. \\
-\hline
-\textbf{Attribution Analysis} & Linking digital identities to real-world organizations using domain registration data and public profiles. \\
-\hline
-\end{tabular}
-\caption{Key elements of a comprehensive forensic report.}
-\end{table}
-
-\subsubsection{Practical Application: IP Geolocation (OSINT)}
-A common forensic task is narrowing down the geographical location of a node or user using public databases.
+\subsubsection{Example: IP Geolocation (OSINT)}
+A common forensic task is trying to determine the geographical location of a node or user using public databases.
 
 \subsubsection*{Contextual IP Tools}
 Tools such as \textbf{IPinfo}, \textbf{ip-api.com}, and \textbf{MaxMind GeoIP} allow investigators to immediately retrieve:
 \begin{itemize}
     \item \textbf{Geographical Data:} City, region, and approximate GPS coordinates.
     \item \textbf{Organization Data:} ASN (Autonomous System Number) and the hosting provider or ISP.
-    \item \textbf{Security Posture:} Identifying if an IP is associated with a VPN, proxy, or Tor exit node.
+    \item \textbf{Obfuscation:} Identifying if an IP is associated with a VPN, proxy, or Tor exit node.
 \end{itemize}
 
 
-\noindent
-By correlating a suspect's public terminal address with known organizational databases (e.g., Politecnico di Torino), investigators can verify the physical location of a device with high reliability, forming the foundation for further investigation into digital footprints.
+\subsubsection{Reconstruction and Timeline Correlation}
+Effective network forensics requires the synchronization of multiple data.
 
-\subsubsection{Forensic Reconstruction and Timeline Correlation}
-Effective network forensics requires the synchronization of multiple data streams to identify the "ground truth" of a digital event.
-
-\subsubsection*{The Three Pillars of Reconstruction}
+\subsubsection*{Pillars of Reconstruction}
 \begin{itemize}
-    \item \textbf{Causal Correlation:} Establishing a direct link between an action (e.g., a specific packet sent) and its result (e.g., a system crash or unauthorized access).
-    \item \textbf{Temporal Synchronization:} Aligning timestamps from varied sources (server logs, ISP metadata, local machine clocks). This often requires accounting for \textbf{Clock Drift} and timezone variations to ensure the sequence of events is accurate.
+    \item \textbf{Causal Correlation:} Establishing a direct link between an action  and its result.
+    \item \textbf{Temporal Synchronization:} Aligning timestamps from varied sources (server logs, ISP metadata, local machine clocks). 
     \item \textbf{Identity Mapping:} Linking network identifiers (IP addresses, MAC addresses, session tokens) to physical entities or specific user accounts.
 \end{itemize}
 
@@ -143,17 +117,14 @@ Evidence retrieved from the network is categorized based on its source and natur
 \caption{Taxonomy of Network Evidence.}
 \end{table}
 
-\subsubsection*{Challenges in Modern Network Analysis}
+\subsubsection{Challenges in Modern Network Analysis}
 As networks evolve, forensics must adapt to increasing layers of complexity.
 
 \subsubsection*{The Encryption and Privacy Paradox}
-The widespread adoption of end-to-end encryption (E2EE) and VPNs has shifted the focus of network forensics from \textbf{content analysis} to \textbf{traffic analysis}.
-\begin{itemize}
-    \item \textbf{Traffic Shaping/Fingerprinting:} Identifying an application or OS based on the behavior of the encrypted packets (size, frequency, timing).
-    \item \textbf{Log Correlation:} Relying on unencrypted "negotiation" data (such as SNI in TLS handshakes) to determine which domains were contacted, even if the payload is hidden.
-\end{itemize}
+The widespread adoption of end-to-end encryption and VPNs has shifted the focus of network forensics from \textbf{content analysis} to \textbf{traffic analysis}.
 
-\subsubsection{Final Reporting: The "So What?" Factor}
+
+\subsubsection{Final Reporting}
 The ultimate goal of the investigation is to produce a document that answers the fundamental forensic questions: \textbf{Who, What, Where, When, and Why}.
 
 \subsubsection*{Operational Reporting Guidelines}
@@ -171,9 +142,11 @@ Given the dynamic nature of these environments, evidence is highly volatile and 
 \subsubsection{Data Acquisition and Preservation}
 Unlike static local storage, social media data is hosted on third-party infrastructures, making traditional bit-stream imaging impossible. Investigators must rely on a combination of API-based collection and advanced scraping techniques.
 
+
+
 \subsubsection*{Methodologies for Legal Admissibility}
 \begin{itemize}
-    \item \textbf{Remote Snapshot Capture:} Using forensic tools to take authenticated "snapshots" of profiles, posts, and comments. These must include cryptographic hashing and server-side timestamps to prevent claims of manipulation.
+    \item \textbf{Remote Snapshot Capture:} Using forensic tools to take authenticated "snapshots" of profiles, posts, and comments. These must include cryptographic hashing and server-side timestamps.
     \item \textbf{Metadata Extraction:} Capturing hidden details such as the \textit{User Agent}, original upload timestamps, and associated IP addresses where available.
     \item \textbf{Chain of Custody for Web Evidence:} Documenting the entire path of acquisition, including the URL, the tools used, and the digital signatures applied at the moment of capture.
 \end{itemize}
@@ -205,15 +178,12 @@ Modern platforms implement several features that complicate forensic investigati
 
 \subsubsection*{Anti-Forensic Obstacles}
 \begin{itemize}
-    \item \textbf{Ephemeral Content:} Posts that automatically disappear (e.g., Stories). These require immediate, automated capture triggers.
-    \item \textbf{Encryption and Privacy Settings:} End-to-end encryption in messaging (E2EE) prevents middle-man interception, forcing investigators to focus on physical endpoint acquisition (smartphone forensics).
+    \item \textbf{Ephemeral Content:} Posts that automatically disappear (e.g., IG Stories). 
+    \item \textbf{Encryption and Privacy Settings:} End-to-end encryption in messaging forcing investigators to focus on physical endpoint acquisition (smartphone).
     \item \textbf{Account Deletion and Spoofing:} The ease of creating "sockpuppet" accounts necessitates the use of OSINT to correlate IP addresses and behavioral fingerprints across different sessions.
 \end{itemize}
 
 \noindent
-
-\subsubsection*{The Role of OSINT in Attribution}
-Social media forensics is rarely performed in isolation. By correlating public profile data with external databases (e.g., domain registration, public code repositories), investigators can transform an anonymous handle into a verifiable identity, providing the "who" behind the digital traces.
 
 \subsection{Anti-forensics Techniques and Countermeasures}
 
@@ -235,14 +205,14 @@ Advanced anti-forensic tools allow the creation of "hidden volumes" within encry
     \item \textbf{Plausible Deniability:} The system is designed such that it is mathematically impossible to prove the existence of a second, hidden volume once the first one is decrypted, providing the user with a defense against coerced password disclosure.
 \end{itemize}
 
-\subsubsection{Artifact Wiping and Metadata Manipulation}
+\subsubsection{Wipping and Metadata Manipulation}
 Unlike simple deletion, wiping ensures that data is physically unrecoverable by overwriting sectors. Metadata manipulation, on the other hand, targets the timeline of events.
 
 \subsubsection*{Timestomping}
 Timestomping is the deliberate modification of file system timestamps (Modified, Accessed, Created, and Birth - MACB). 
 \begin{itemize}
     \item \textbf{Objective:} To disrupt timeline reconstruction and mislead investigators regarding the sequence of malicious activities.
-    \item \textbf{Detection:} Analysts look for inconsistencies between the MFT\\ ($ \$$STANDARD\_INFORMATION vs. $ \$$FILE\_NAME) and system logs or registry keys that may still hold the original values.
+    \item \textbf{Detection:} Analysts look for inconsistencies between the MFT (STANDARD\_INFORMATION vs.\ FILE\_NAME) and system logs or registry keys that may still hold the original values.
 \end{itemize}
 
 \subsubsection{Volatile Memory and Fileless Malware}
@@ -250,27 +220,11 @@ Modern attacks increasingly avoid writing data to the physical disk to minimize 
 
 \subsubsection*{Memory-Only Execution}
 \begin{itemize}
-    \item \textbf{RAM-only Residency:} Malware resides exclusively in volatile memory (RAM), disappearing upon system reboot.
+    \item \textbf{RAM-only Residency:} Malware resides exclusively in on RAM, disappearing upon system reboot.
     \item \textbf{Process Injection:} Hiding malicious code within the memory space of legitimate system processes (e.g., \texttt{svchost.exe} or \texttt{explorer.exe}).
     \item \textbf{Countermeasure:} \textbf{Live Memory Acquisition} is critical. If the system is powered off before an image of the RAM is taken, the evidence is permanently lost.
 \end{itemize}
 
-\begin{table}[H]
-\centering
-\small
-\begin{tabular}{|p{3.5cm}|p{8.5cm}|}
-\hline
-\textbf{Anti-Forensic Category} & \textbf{Forensic Challenge} \\
-\hline
-\textbf{Data Destruction} & Use of wiping tools to overwrite unallocated space and slack space. \\
-\hline
-\textbf{Trace Minimization} & Use of "incognito" modes, portable apps, and Live OS (e.g., Tails) that leave no traces on the host HDD. \\
-\hline
-\textbf{Obfuscation} & Packing and encoding of binaries to bypass signature-based detection and complicate reverse engineering. \\
-\hline
-\end{tabular}
-\caption{Common Anti-forensic strategies and their impact on investigations.}
-\end{table}
 
 \subsubsection{Detection of Anti-forensic Activity}
 The presence of anti-forensic tools is itself a significant lead.
@@ -280,10 +234,6 @@ The presence of anti-forensic tools is itself a significant lead.
 \end{itemize}
 
 \noindent
-
-
-\subsubsection*{The "Arms Race" Paradox}
-Anti-forensics is characterized by a continuous evolution: as forensic tools become more sophisticated in identifying hidden traces, anti-forensic methods shift toward more abstract layers of the system (e.g., BIOS/UEFI level rootkits or GPU-based malware), requiring investigators to maintain a multi-layered acquisition strategy.
 
 \subsubsection{Countering Anti-forensics}
 The evolution of anti-forensic techniques necessitates a proactive and multi-layered defense strategy\\
@@ -343,9 +293,9 @@ box/.style={rectangle,rounded corners,draw=black,fill=gray!5,align=center,text w
 \caption{The relationship between forensic analysis and threat intelligence integration.}
 \end{figure}
 
-\subsubsection*{OSINT and Collaborative Forensics}
+\noindent
 Platforms like \textbf{VirusTotal} and \textbf{AlienVault OTX} allow for a collaborative approach to forensics. By sharing IoCs and malware hashes, organizations can identify if a local infection is part of a global campaign, enabling a more rapid and informed defensive response. \\
-This information exchange is vital for tracking \textit{metamorphic} or \textit{polymorphic} malware that continuously alters its code to evade signature-based detection.
+This information is crucial for tracking \textit{metamorphisis} of malwares that alters its code to evade signature-based detection.
 
 \subsubsection{Focus: Tor Network}
 
@@ -379,10 +329,10 @@ A standard Tor circuit consists of three distinct nodes randomly selected by the
 \end{table}
 
 \subsubsection*{Multi-Layered Onion Encryption}
-The core cryptographic mechanism relies on symmetric keys established via a telescoping Diffie-Hellman handshake.
+The core cryptographic mechanism relies on symmetric keys established via a DH handshake.
 \begin{itemize}
     \item \textbf{Layered Encapsulation:} The client encrypts the original payload multiple times, creating nested layers corresponding to each relay in the circuit.
-    \item \textbf{Hop-by-Hop Decryption:} As a packet transits through the network, each node peels off its respective layer of encryption using its symmetric key, revealing only the routing instructions for the next hop.
+    \item \textbf{Hop-by-Hop Decryption:} As a packet moves through the network, each node removes its respective layer of encryption using its symmetric key, revealing only the routing instructions for the next hop.
     \item \textbf{Exit Node Vulnerabilities:} Because the Exit Node strips away the final layer of Tor encryption, it can observe raw application data (e.g., HTTP traffic). If upper-layer protocols lack end-to-end encryption (such as HTTPS/TLS), the Exit Node operator can capture sensitive credentials or alter payloads.
 \end{itemize}
 
