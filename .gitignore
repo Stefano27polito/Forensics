@@ -1,5 +1,5 @@
 # Ignore the main output directory 
-/*.pdf
+#/*.pdf
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
