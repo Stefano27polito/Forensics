@@ -1,0 +1,69 @@
+\section{Anti-Forensics}
+
+Anti-forensics represents any attempt to compromise the availability, authenticity, or integrity of digital evidence to frustrate the investigative process. These practices aim to significantly increase the investigator's operational uncertainty and resource expenditure.
+
+\subsection{Data Hiding and Obfuscation}
+
+Data hiding focuses on hiding the existence of digital assets within an operating system or specific media container files.
+
+\subsubsection*{Steganography}
+Steganography is the technique of hiding a secret message inside an ordinary file.
+
+\begin{itemize}
+    \item \textbf{Mechanism:} The payload is embedded into redundant or insignificant data structures of a host file.\\
+    A common method is modifying the Least Significant Bit (LSB) of pixel values in digital images. Because the visual change is imperceptible to the human eye, the file appears completely normal.
+    \item \textbf{Detection (Steganalysis):} Investigators must run statistical integrity tests on suspect file formats to detect mathematical anomalies in the bit distribution.
+\end{itemize}
+
+\subsubsection*{Encryption and Hidden}
+Some anti-forensic tools can create nested encrypted containers to obfucate the sentitive data.
+
+\subsection{Artifact Wiping and Metadata Manipulation}
+
+Wiping and manipulation techniques focus on destroying file system properties or rewriting metadata parameters to disrupt chronological investigations.
+
+\subsubsection*{Timestomping}
+Timestomping is the deliberate alteration of file metadata timestamps (Modified, Accessed, Created, and Born values). (\textit{Prfessor azeni uses the acronim MACB})
+\begin{itemize}
+    \item corrupt the chronological reconstruction of security events and file access patterns.
+    \item \textbf{Detection:} Analysts locate anomalies by cross-referencing file system master structures (such as checking discrepancies between \texttt{\$STANDARD\_INFORMATION} and \texttt{\$FILE\_NAME} attributes in the NTFS Master File Table) against independent system event logs
+\end{itemize}
+
+\subsection{Volatile Memory obfuscation}
+ 
+Modern attack vectors increasingly execute entirely within volatile storage layers to bypass persistent disk monitoring mechanisms.
+
+\subsubsection*{Memory-Only Execution}
+\begin{itemize}
+    \item \textbf{RAM-Only Footprint:} Fileless malware avoids writing binary files directly to physical disk storage, operating strictly within RAM.
+    \item \textbf{Process Injection:} Malicious instructions are injected directly into the active memory addresses of legitimate system processes 
+    \item \textbf{Investigation:} Performing a live memory acquisition is needed. If the computer is powered down before a physical dump of the RAM is captured, all running artifacts and volatile network configurations are permanently lost.
+\end{itemize}
+
+\subsubsection*{Classification of techniques}
+\begin{itemize}
+    \item \textbf{Data Destruction:} Specialized wiping software can overwrite unallocated disk blocks and sector slack space.
+    \item \textbf{Trace Minimization:} Using incognito browser, portable binaries, or live OS platforms (such as Tails) to avoid leaving residual disk traces.
+    \item \textbf{Obfuscation:} Compressing, packing, or encoding binaries to evade signature-based detection and make reverse-engineering harder.
+\end{itemize}
+
+\subsection{Detection of Anti-Forensic Interventions}
+
+The application of anti-forensic measures frequently creates its own distinctive anomalies within the host computing environment.
+
+\begin{itemize}
+    \item \textbf{Tool Residues:} The physical presence or historic execution logs of cleanup utilities (such as CCleaner) can be identified through file system analysis and registry examination.
+    \item \textbf{Statistical Entropy Discrepancies:} High binary entropy measurements across localized disk files may indicate the presence of encrypted or compressed data, suggesting potential obfuscations
+\end{itemize}
+
+\subsection{Network Anti-Forensics}
+
+Network anti-forensics uses specialized techniques designed to prevent network-monitoring
+
+\subsubsection*{Tunneling Protocols and Encryption Layering}
+To prevent Deep Packet Inspection (DPI) and boundary logging, network traffic can be encapsulated inside secondary encrypted protocols.
+\begin{itemize}
+    \item \textbf{Virtual Private Networks (VPN):} Establishes an encrypted point-to-point tunnel between the host machine and a remote exit server. This masks the user's true IP address and encrypts all traffic, making it difficult for network monitors to identify the source or content of the data.
+    \item \textbf{Secure Shell (SSH) Tunneling:} Directing local application streams through an encrypted SSH connection to mask connection telemetry and bypass perimeter security restrictions.
+    \item \textbf{Tor Network:} routes traffic through multiple nodes, providing layered encryption and anonymity
+\end{itemize}

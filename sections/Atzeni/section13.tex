@@ -1,0 +1,42 @@
+
+\section{Autopsy Forensic Browser}
+
+Autopsy is a graphical forensics platform designed to simplify the analysis of disk images and volatile artifacts.\\
+It acts as an abstraction layer allowing investigators to visualize complex storage environments.
+
+\subsubsection*{Functionalities}
+The platform coordinates several specialized modules that automatically parse the data source to organize and extract critical evidence:
+\begin{itemize}
+    \item \textbf{Keyword Search:} Indexes all textual data across the file system, enabling automated queries for specific text strings, partial matches, or regular expressions (Regex).
+    \item \textbf{Recent Activity Extractor:} Automatically carves and isolates user activity footprints, such as web browsing history and recent application usage.
+    \item \textbf{File Type:} Identifies files by their actual internal file signatures ("magic bytes") and cross-references them against their outward-facing file extensions to flag disguised files.
+    \item \textbf{Exif Parser:} Extracts hidden metadata embedded within graphic file formats, revealing creation timestamps, device specifications, or GPS coordinates.
+\end{itemize}
+
+\noindent
+A fundamental feature of Autopsy is its centralized timeline visualization tool, which maps system/user actions based on historical timestamps.
+
+\begin{itemize}
+    \item \textbf{Visual Telemetry Mapping:} Tool automatically aggregates chronological timestamps from files, web artifacts, and metadata fields. It then presents this information as visual bar charts showing the total event count over time.
+    \item \textbf{Pattern and Activity Isolation:} High visual spikes immediately point out periods of dense activity, allowing investigators to track down anomalies or automated tasks within specific hourly windows.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{timeline1.png}
+    \caption{Autopsy Timeline Interface}
+    \label{fig:autopsy_timeline_years}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{timeline2.png}
+    \caption{Autopsy Detailed Timeline view}
+    \label{fig:autopsy_timeline_details}
+\end{figure}
+
+\noindent
+
+When graphical analysis environment is not required, investigators deploy command-line tools to extract specific target data structures.
+
+
