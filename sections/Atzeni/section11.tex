@@ -117,3 +117,38 @@ To optimize access speeds and prevent system logs from inflating rapidly, connec
     \item \textbf{\texttt{btmp}:} Records historical data for failed authentication attempts, serving as a primary telemetry source for identifying automated brute-force attacks or scanning patterns.
     \item \textbf{Analytical Verification:} These binary files are queried using specialized operating system utilities such as \texttt{last}, \texttt{lastb}, or \texttt{who}, bypassable only if an attacker manually zeros out or deletes the underlying data structures.
 \end{itemize}
+
+\subsection{Advanced Volatile Analysis Frameworks}
+
+When data is cleared or unallocated during nominal deletion on a storage drive, the information is not instantly erased from central memory.\\
+A data segment or application payload remains intact in Random Access Memory (RAM) until a new set of computation data or module loads explicitly overwrite that memory region. 
+
+\subsubsection*{Volatility Architecture}
+The \textbf{Volatility} framework is an open-source, multi-platform forensic suite engineered to analyze raw dumps, crash dumps, hibernation files, or LiME captures.
+\medskip
+
+\noindent
+Every operating system organizes its memory footprint through distinct architectural patterns. Volatilty must understand these precise data layout abstractions to convert raw binary offsets into human eadable data trees:
+\begin{itemize}
+    \item \textbf{Volatility 2 Profiles:} Legacy versions require investigators to specify a rigid OS target profile. Analysts execute the command \texttt{volatility -f memory.raw imageinfo} to query memory manager remnants for profile suggestions. Once a candidate profile is selected, plugins are executed against it:
+    \begin{verbatim}
+    volatility -f memory.raw --profile=Win10x64_19041 [pluginname]
+    \end{verbatim}
+    If an incorrect profile is provided, every structural offset calculation fails.
+    \item \textbf{Volatility 3 Symbol Tables:} Modern versions migrate away from rigid system profiles, utilizing automated, structured JSON symbol tables that map kernel offsets dynamically for specific kernel builds.
+    \begin{verbatim}
+    python3 vol.py -f memory.raw windows.info
+    \end{verbatim}
+\end{itemize}
+
+\subsubsection*{Use Case}
+Volatility modules help investigators quickly extract runtime traces and detect suspicious behavior:
+\begin{itemize}
+    \item \textbf{Behavioral analysis:} identify suspicious processes and network connections (e.g., orphaned child processes).
+    \item \textbf{Rootkit detection:} search for kernel manipulation and hidden drivers.
+    \item \textbf{Data extraction:} recover ephemeral keys, credentials, and in-memory application data.
+\end{itemize}
+
+\subsubsection*{Rekall}
+\textbf{Rekall} is an alternative open-source memory forensics framework developed as a fork of the original Volatility suite.\\
+It was engineered to improve modularity, scalability, and internal memory structure usability across different OS.
