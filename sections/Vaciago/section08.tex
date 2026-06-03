@@ -1,0 +1,131 @@
+\section{III lab: TechMed}
+
+The TechMed S.r.l. case study serves as a practical simulation demonstrating the complex intersection of digital forensics pipeline management, criminal law characterization, and compliance mapping under the GDPR and European cybersecurity directives. 
+
+
+
+\subsection{Company Overview and Target Infrastructure}
+TechMed S.r.l. is an Italian medical sector company managing patient care operations with the following profiles:
+\begin{itemize}
+    \item \textbf{Corporate Profile:} Based in Via Roma 45, Torino, Italy, the company maintains 85 employees (documented inside internal HR records) and achieves an annual turnover of EUR 12 million. Its core product line focuses on patient management software distributed to clinics and hospitals.
+    \item \textbf{Key Personnel:} The governance structure consists of Dott. Andrea Colombo (CEO), Ing. Marco Benedetti (IT Manager), Dott.ssa Elena Ferri (Finance Manager, authorized to sign transactions up to EUR 100,000), and Avv. Laura Rossi (Data Protection Officer - DPO).
+    \item \textbf{Target IT Infrastructure:} The corporate environment relies on a Windows Active Directory (AD) architecture coordinating an on-premise Microsoft Exchange 2019 mail server. Core customer records are kept inside an on-premise Cloud DB hosted by Cloud Italia S.r.l. Perimeter defense is managed via a Fortinet FortiGate 60F firewall with an active VPN gateway, while endpoint protection relies on standard Windows Defender antivirus software.
+    \item \textbf{Personal Data Assets:} The company processes a dense footprint of sensitive data, including employee details and operational health metrics, approximately 450 client contact registries, and a cloud testing database containing data of roughly 3,200 active patients (encompassing full names, dates of birth, medical record numbers, and specific diagnostic codes).
+\end{itemize}
+
+
+
+\subsection{The Chronological Incident Timeline}
+The compilation of an airtight chronological timeline is a mandatory open-ended question requirement for forensic examination compliance. The incident unfolded over a multi-day window tracking a coordinated spear-phishing and Business Email Compromise (BEC) fraud scenario:
+
+\begin{itemize}
+    \item \textbf{Monday, 15/04 -- 08:45 CET:} A targeted phishing email disguised as a corporate notification (\texttt{from: hr.notifications@techmed-portal.com}) is sent directly to an employee, Giovanni Martini.
+    \item \textbf{Monday, 15/04 -- 08:50 CET:} Martini opens the malicious email attachment labeled \texttt{Payroll\_Form\_2026.docx}, executing a macro vector that instantly drops and runs a persistent malware payload on his local workstation.
+    \item \textbf{Monday, 15/04 -- 08:52 CET:} The compromised workstation establishes its initial outbound Command and Control (C2) connection to an external hostile IP address (\texttt{185.143.223.45}), resulting in the rapid exfiltration of 450 KB of corporate data, specifically stealing system configurations and employee credentials.
+    \item \textbf{Monday, 15/04 -- 09:15 CET:} A secondary deeper C2 connection executes the exfiltration of 12.3 MB of data harvested directly from the \texttt{HR\_Confidential} shared storage folder, stealing employee ID card copies and payroll contracts.
+    \item \textbf{Monday, 15/04 -- 10:30 CET:} The malicious actor launches a secondary phase leveraging the harvested credentials. A spoofed email simulating the identity of the CEO is sent to the Finance Manager, Elena Ferri, demanding an urgent wire transfer of EUR 95,000.
+    \item \textbf{Monday, 15/04 -- 11:15 CET:} Trusting the spoofed message, Ferri authorizes the wire transfer to an account registered to \textit{TechSolutions GmbH} at Deutsche Bank in Germany. The funds are immediately redirected by the attackers to an untraceable destination bank.
+    \item \textbf{Tuesday, 16/04 -- 09:00 CET:} The CEO returns from an offshore business trip, notes the unauthorized transaction logs, and explicitly denies ever sending the urgent wire transfer request.
+    \item \textbf{Tuesday, 16/04 -- 10:00 CET:} The IT Manager initiates an internal systems investigation and uncovers the massive background data exfiltration breach.
+    \item \textbf{Tuesday, 16/04 -- 14:30 CET:} The DPO, Avv. Laura Rossi, is formally informed of the personal data breach, marking the official "Moment of Awareness" under regulatory frameworks.
+    \item \textbf{Tuesday, 16/04 -- 15:00 CET:} Martini's workstation is isolated from the local network without executing a system shutdown. The specialized external firm \textit{Forensics Italia S.r.l.} is formally engaged to handle the incident response.
+    \item \textbf{Wednesday, 17/04 -- 09:00 CET:} The forensic response team initiates evidence acquisition, capturing a volatile RAM dump, a bit-stream physical disk image, firewall transaction logs, and complete email server logs.
+    \item \textbf{Thursday, 18/04 -- 10:00 CET (The Deadline Window):} A formal criminal complaint is submitted to the Procura della Repubblica of Turin. Concurrently, the 72-hour regulatory notification window to the Supervisory Authority reaches its compliance limit.
+\end{itemize}
+
+
+
+\subsection{Digital Evidence Collection and Priority Order}
+When managing an active incident response scene, investigators must adhere to a strict, legally recognized Order of Volatility to ensure evidence admissibility in criminal proceedings. Capturing items out of order destroys volatile traces and undermines the scientific value of the digital artifacts.
+
+
+
+\begin{enumerate}
+    \item \textbf{First Priority -- Volatile RAM Dump:} Captured immediately using tools such as DumpIt or Magnet RAM Capture before any system state modification. RAM contains critical active processes, volatile network sockets, encryption keys, and memory-only malware remnants. A SHA-256 integrity hash must be computed immediately post-acquisition.
+    \item \textbf{Second Priority -- Physical Disk Image:} Executed on the isolated workstation using FTK Imager via hardware write-blockers to preserve slack space and unallocated sectors. This captures the dropped payload and MFT file system records into a validated \texttt{.E01} evidence file backed by MD5 and SHA-256 verification hashes.
+    \item \textbf{Third Priority -- Firewall Logs (Fortinet FortiGate 60F):} Exporting the native, immutable log files covering the window of April 14–17, 2026. These logs provide perimeter validation of outbound traffic, data volumes, and external C2 IP addresses.
+    \item \textbf{Fourth Priority -- Email Server Logs (Exchange 2019):} Collecting IIS connection histories, mail tracking logs, and complete message headers to audit the spoofing vectors and map out the exact path of the fraud.
+\end{enumerate}
+
+
+
+\subsection{Forensic Artifact Analysis and Infection Chain}
+The forensic analysis reconstructed the step-by-step infection path by mapping distinct, low-level artifacts left across the Windows operating system layers.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{|p{3cm}|p{5.5cm}|p{4.5cm}|}
+    \hline
+    \textbf{Attack Stage} & \textbf{System Mechanism} & \textbf{Forensic Artifact Generated} \\ \hline
+    Phishing Delivery \& Macro Execution & Employee opens \texttt{Payroll\_Form\_2026.docx} via Microsoft Word at 08:50. & \textbf{Prefetch Files:} Creation of a updated entry for \texttt{WINWORD.EXE} confirming launch times and execution counters. \\ \hline
+    Payload Drop & The macro extracts and drops an unauthorized binary or DLL file into hidden directories. & \textbf{File System Entry:} \texttt{\%APPDATA\%\textbackslash Roaming\textbackslash} showing a custom executable or hidden Alternate Data Streams (\$MFT entries). \\ \hline
+    Persistence Mechanism & Malware establishes a foothold to survive system reboots. & \textbf{Registry Run Keys:} Alteration of keys within \texttt{HKCU\textbackslash Software\textbackslash Microsoft\textbackslash Windows\textbackslash CurrentVersion\textbackslash Run} to launch the malware on startup. \\ \hline
+    C2 Communication \& Data Exfiltration & Workstation initiates data transfer to external malicious IP \texttt{185.143.223.45:443}. & \textbf{Event Logs / Sysmon:} ID 3 (Network connection), ID 7 (DLL load), and ID 1 (Process creation) recording the connection. \\ \hline
+    \end{tabular}
+    \caption{Forensic artifact matrix mapping the TechMed infection chain.}
+\end{figure}
+
+A critical technical question emerges: why did standard signature-based antivirus software (Windows Defender) fail to flag the malware? The analysis indicates that the attackers deployed a highly polymorphic payload or a zero-day exploit specifically engineered to evade static signatures. Overcoming this vulnerability requires implementing advanced Endpoint Detection and Response (EDR) solutions (such as Microsoft Defender for Endpoint or CrowdStrike Falcon) that leverage continuous behavioral analysis rather than static definitions.
+
+Reviewing the Fortinet firewall logs confirms a matching outbound data footprint. The connection at 08:52 transferred 450 KB of data, which matches the size of an encrypted text file containing system credentials and email address trees. The secondary connection at 09:15 transferred 12.3 MB, a data volume that is highly consistent with a compressed directory of high-density PDF files containing employee ID card scans and corporate contracts. Implementing Data Loss Prevention (DLP) filters to block unapproved bulk outbound transfers over 5 MB, alongside a Threat Intelligence platform (such as AlienVault OTX or Cisco Talos) to instantly flag known malicious C2 IP addresses, would have mitigated this exfiltration.
+
+
+
+\subsection{Criminal Offences Analysis under the Italian Penal Code}
+From a processual law perspective, the attack chain satisfies the objective and subjective elements of two distinct criminal offenses under the Italian Penal Code (c.p.):
+
+\subsubsection*{Art. 615-ter c.p. -- Unauthorised Computer Access}
+The execution of the malware payload on TechMed's internal infrastructure constitutes an unauthorized entry into a protected corporate computing system.
+\begin{itemize}
+    \item \textbf{Elements fulfilled:} The company maintained active security measures (AD authentication, VPN configurations, perimeter firewalls). The attacker bypassed these controls to access the mail server and local HR folders, deliberately violating the explicit will of the system owner.
+    \item \textbf{Aggravating Circumstances:} The crime is aggravated under paragraph 2 because it was committed by abusing the role of an operator, and under paragraph 3 because the intrusion resulted in the theft of highly confidential data, causing direct systemic damage to corporate infrastructure.
+\end{itemize}
+
+\subsubsection*{Art. 640-ter c.p. -- Computer Fraud (\textit{Frode Informatica})}
+The secondary phase of the attack utilizes identity spoofing to execute an illegal, high-value financial transaction.
+\begin{itemize}
+    \item \textbf{Elements fulfilled:} By manipulating the header metadata of an email to simulate the digital identity of the CEO (\texttt{a.colombo@techmed.it}), the attacker altered the normal functioning of a computer communication system. This fraud led to an unauthorized wire transfer of EUR 95,000, creating an unjust profit for the malicious actor and causing direct financial damage to TechMed S.r.l.
+    \item \textbf{Aggravating Circumstances:} The offense is aggravated under paragraph 2 due to the significant financial value of the stolen funds (exceeding EUR 50,000) and the concurrent deployment of identity theft and digital substitution (Art. 494 c.p.) to deceive the financial manager.
+\end{itemize}
+
+
+
+\subsection{GDPR Admissibility, Mandatory Deadlines, and ENISA Governance}
+Because the exfiltrated files contained sensitive employee identification documents and patient medical histories, TechMed S.r.l. faced an immediate regulatory crisis under **GDPR Art. 33**.
+
+The 72-Hour Compliance Window
+The strict regulatory countdown does not start from the physical moment of the cyberattack (Monday), but from the exact hour the data controller achieves formal awareness of the breach. In this scenario, the IT Manager discovered the exfiltration on Tuesday, 16/04 at 10:00, defining the exact "Moment of Awareness". Consequently, the mandatory notification to the Supervisory Authority must be filed no later than Thursday, 17/04 at 10:00.
+
+A formal risk assessment indicates that the breached data creates a **high risk** to the rights and freedoms of the data subjects, exposing them to identity theft, financial fraud, and targeted spear-phishing campaigns. Under **GDPR Art. 34**, this high-risk threshold makes it mandatory to distribute a clear, prompt communication directly to all affected data subjects.
+
+The ENISA Unified Incident Reporting Revolution
+From an international regulatory standpoint, cybersecurity frameworks are moving toward a centralized incident governance structure managed by the European Union Agency for Cybersecurity (ENISA). 
+
+Under incoming unified reporting frameworks (such as the NIS2 directive guidelines), companies will no longer need to manage separate, disorganized notices across multiple national entities (such as separate data protection authorities, AGID for the AI Act, or domestic cybersecurity centers). Instead, investigators will submit a single, comprehensive incident notice directly to **ENISA within a strict 24-hour early notice window**. ENISA will then act as the single point of contact, verifying the incident data and handling the distribution of alerts to all relevant national, European, and data protection authorities. This model significantly streamlines corporate incident response, allowing internal security teams to focus on mitigation rather than balancing competing compliance requirements during a crisis.
+
+
+
+\subsection{Organizational Failures and Operational Remedies}
+The successful execution of the TechMed intrusion exposes four distinct organizational and technical failures within the corporate security posture. Resolving these vulnerabilities requires implementing targeted technical remedies aligned with international frameworks:
+
+\begin{enumerate}
+    \item \textbf{Failure 1: Complete Absence of Email Authentication (No SPF / DKIM / DMARC):} The attackers successfully spoofed the CEO's internal email address because the corporate domain lacked basic validation records. Ferri had no technical means to verify the sender's authenticity.
+    \textit{Remedy:} Publish strict SPF, DKIM, and DMARC DNS records enforcing a \texttt{p=reject} policy within 30 days, fully aligning the mail gateway with NIS2 Directive Art. 21 requirements.
+    \item \textbf{Failure 2: Absence of Emergency Payment Verification Procedures:} The Finance Manager authorized a massive wire transfer of EUR 95,000 based entirely on an unverified email text, bypassing basic internal financial controls.
+    \textit{Remedy:} Implement a mandatory Payment Authorization Policy requiring a direct, verbal double-confirmation (via phone or in-person verification) for any outbound transaction exceeding EUR 50,000, strictly mapping controls to ISO 27001 A.6.1.2 segregation of duties.
+    \item \textbf{Failure 3: Insufficient Signature-Based Antivirus Protections:} Standard Windows Defender software failed to intercept the polymorphic document payload, allowing it to drop and execute unhindered.
+    \textit{Remedy:} Deploy an advanced Endpoint Detection and Response (EDR) platform across all corporate endpoints to utilize continuous behavioral and heuristic analysis, satisfying GDPR Art. 32 continuous security monitoring requirements.
+    \item \textbf{Failure 4: Complete Lack of Employee Anti-Phishing Training:} Martini compromised the corporate network by opening an unverified attachment from a suspicious external domain (\texttt{techmed-portal.com}) without checking the sender.
+    \textit{Remedy:} Establish mandatory, quarterly anti-phishing simulations paired with annual security awareness training for all staff tiers to satisfy ISO 27001 A.7.2.2 staff training guidelines.
+\end{enumerate}
+
+
+
+\subsection{Key Takeaways for the Forensic Professional}
+The TechMed S.r.l. lab outlines four core pillars that must guide a professional forensic examiner's report:
+\begin{itemize}
+    \item \textbf{Digital Forensics Discipline:} Maintaining a strict chain of custody and executing a proper evidence collection order (prioritizing volatile RAM before persistent disk and network logs) remains an unalterable prerequisite for data to be admitted as evidence in criminal court.
+    \item \textbf{Criminal Law Literacy:} Forensic experts must map technical events directly to the specific legal elements of cybercrimes (such as Art. 615-ter and 640-ter c.p.). Furthermore, when cross-border financial redirection occurs, investigators must immediately prepare documentation for a European Investigation Order.
+    \item \textbf{Regulatory Compliance (GDPR):} Data breaches involving sensitive patient records create an immediate, high-risk situation, making a formal notification to the authority within 72 hours and transparent communication to the data subjects mandatory.
+    \item \textbf{Organizational Governance:} Technical defense tools are useless without clear corporate policies. Robust digital security requires an integrated mix of technical authentication (SPF/DKIM/DMARC), advanced endpoint detection (EDR), strict payment controls, and ongoing employee training.
+\end{itemize}

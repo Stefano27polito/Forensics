@@ -1,0 +1,159 @@
+\section{I lab: Garlasco}
+
+The Garlasco murder case represents one of the most complex procedural case regarding the collection, admissibility, and evaluation of digital evidence.\\
+
+\subsection{Procedural Framework and Scope of Analysis}
+The legal analysis examines how digital data was handled:
+\begin{itemize}
+    \item \textbf{First Instance:} A judgment issued by the GUP (\textit{Giudice dell'Udienza Preliminare}) of the Court of Vigevano on December 17, 2009. This occurred during an abbreviated trial (\textit{giudizio abbreviato}) featuring an \textit{ex officio} technical expert assessment ordered under Art. 441, co. 5 of the Italian Code of Criminal Procedure (c.p.p.).
+    \item \textbf{Second Instance:} A judgment issued by the Milano Court of Assizes of Appeal on December 6, 2011 (filed on March 5, 2012), which resulted in the full confirmation of the first-instance ruling.
+\end{itemize}
+
+
+
+\subsection{Digital Alibi}
+The primary focus of the digital investigation was the reconstruction of the defendant's (Alberto Stasi) digital alibi on the morning of the murder (13 august 2007).\\
+The defense argued that the computer's usage timeline established an alibi, while the prosecution evaluated the behavioral sequence from a psychological standpoint to determine its compatibility with a crime committed moments earlier.
+
+\subsubsection*{09:12 a.m}
+The electronic timestamp recording the deactivation of the Poggi home alarm at 09:12 a.m. represents the unalterable "hard" datum of the case.\\
+In the judicial reasoning, this log serves a three-fold function:
+\begin{enumerate}
+    \item \textbf{Sign of Life:} It definitively proves that a person was physically present inside the home at that exact moment.
+    \item \textbf{Temporal Window:} It establishes the baseline reference parameter for placing the murder.
+    \item \textbf{Evidentiary Hinge:} It serves as the cross-reference anchor connecting the physical event timeline with the digital timelines (laptop logs and phone records).
+\end{enumerate}
+
+\subsubsection*{09:35 a.m. – 10:07 a.m}
+The forensic expert report managed by the court-appointed \textit{Porta-Occhetti} panel reconstructed this time window with high precision, mapping the most controversial segment of the digital alibi:
+\begin{itemize}
+    \item \textbf{09:35 a.m.:} The laptop PC was activated. The startup moment was identified through standard operating system logs and configuration artifacts.
+    \item \textbf{09:38 a.m. – 10:07 a.m.:} User session involved viewing pornographic images. This activity was documented via residual operating system artifacts, including thumbnails, Most Recently Used (MRU) registries, and temporary internet files.
+    \item \textbf{10:07 a.m.:} Immediately following the pornographic session, the user opened the university thesis file.
+\end{itemize}
+
+\subsubsection*{10:17 a.m. – 12:20 p.m}
+The court identified continuous activity on the thesis binary file. However, a significant forensic challenge arose: the primary operating system artifacts—the temporary link files (\texttt{.lnk}) and temporary application files—were compromised due to extensive technical alterations suffered by the exhibit while in police custody.
+\medskip
+
+\noindent
+To overcome this degradation, the investigators implemented a methodological breakthrough by shifting focus to \textbf{document metadata} located outside standard operating system registry traces.\\
+They extracted internal document statistics, including author identification strings, last modified date and time stamps, total number of file revisions, and total cumulative editing time.
+\medskip
+
+\noindent
+The first-instance judgment accepted this reconstruction as conclusive evidence of direct user interaction. The GUP explicitly rejected the prosecution's argument that "no temporary files equaled no user activity," branding that equation as technically and logically incorrect under the specific circumstances of the degraded exhibit.
+
+
+\subsubsection*{Multi-Source Correlation}
+The strength of the integrated timeline relied on cross-referencing heterogeneous digital data sources into a single timeline:
+\begin{itemize}
+    \item \textbf{Pauses in PC Activity:} The expert report mapped specific windows of inactivity where no user actions were recorded by operating system configuration artifacts.
+    \item \textbf{Unanswered Call Records:} Call Detail Records (CDRs) extracted via telecom forensics documented multiple missed calls to Chiara Poggi's mobile phone. These unanswered calls occurred at times that overlapped with the identified computer inactivity windows.
+    \item \textbf{Probabilistic Line Attribution:} The expert panel conducted a statistical analysis covering a historical six-month window of incoming anonymous calls. By examining usage patterns, locations, and call timing, they applied probabilistic reasoning to attribute specific anonymous calls to Stasi's domestic landline.
+\end{itemize}
+
+\subsection{Procedural Violations, Contamination, and Jurisprudence}
+The handling of the laptop computer following the crime represents a major point of discussion regarding chain of custody preservation and the admissibility of contaminated exhibits.
+
+\subsubsection*{The Delivery Context of the Laptop}
+The laptop was officially acquired by investigators on 14/08/2007.\\
+The prosecution initially argued that the defendant voluntarily handed over the PC as a calculated move to establish a prepackaged digital alibi, citing this as evidence of premeditation. 
+\medskip
+
+\noindent
+On appeal, the Court of Assizes of Appeal explicitly rejected this conjectural reading. The ruling clarified that because the computer was seized during an institutional, documented police search, its acquisition could not be legally interpreted as an isolated, strategic voluntary handover.
+
+\subsubsection*{Post-Seizure Accesses}
+Between August 14 and August 29, the digital exhibit was held in the custody of the Carabinieri. \\
+The first-instance judgment used the explicit phrasing "repeatedly and improperly" to characterize the actions performed on the laptop during this 15-day pre-forensic phase. Technical checks executed later revealed extensive undocumented actions that directly altered critical data:
+\begin{itemize}
+    \item \textbf{Undocumented Accesses:} The actual number of system startups and logings far exceeded what was declared in the initial police report (August 29).
+    \item \textbf{Unrecorded USB Peripherals:} Multiple external USB storage devices were connected to the evidence computer.\\
+    This introduced automated file writes and registry alterations.
+    \item \textbf{External Volume Mapping:} Investigators executed direct data access to an external hard drive connected to the PC, completely unprotected by write-blockers.
+    \item \textbf{Alibi File Alteration:} The specific thesis file was opened multiple times, which modified the native file system metadata and overwrote last-accessed timestamps.
+\end{itemize}
+
+\subsubsection*{Moment of Discontinuity}
+The timeline of custody reflects an  operational division:
+\begin{itemize}
+    \item \textbf{Pre-Discontinuity Phase (Aug 14 – Aug 29):} A 15-day non-forensic window characterized by uncontrolled manipulation, absence of software/hardware write-blocking, and inaccurate tracking logs.
+    \item \textbf{Post-Discontinuity Phase (Aug 29 onward):} The point at which the exhibit was transferred to specialized technical consultants who generated bit-stream forensic duplicates using accepted scientific protocols.
+\end{itemize}
+The forensic damage, however, was already done. The court-appointed expert panel reported that \textbf{73.8\% of visible files} (comprising over 56,000 individual files) had been altered or deleted during the pre-forensic police custody window.
+
+\subsubsection*{Defense objection}
+The defense raised a formal objection demanding that the contents of the PC be declared legally inadmissible due to the clear contamination of the source data.\\
+The GUP rejected this motion through an interlocutory order on March 17, 2009, establishing a notable precedent for Italian digital forensics jurisprudence:
+\begin{enumerate}
+    \item \textbf{Fragility of Digital Evidence:} The court observed that digital documents are subject to rapid alteration or deletion, distinguishing them conceptually from traditional physical or paper evidence.
+    \item \textbf{Law 48/2008:} The judge explicitly referenced Law 48/2008. Although the law entered into force in March 2008 (after the contamination occurred in 2007) the court invoked it as a regulatory confirmation of a principle already present within the legal system: that digital evidence requires specific procedural safeguards to maintain its integrity.
+    \item \textbf{Legal Classification of the Operations:} Crucially, the GUP classified the Carabinieri's early actions as "Judicial Police acts" (\textit{atti di Polizia Giudiziaria}) under Arts. 55 and 348 c.p.p. (the collection of urgent elements), rather than a formal "technical examination" (\textit{accertamento tecnico}) under Arts. 359 and 360 c.p.p. 
+\end{enumerate}
+The legal principle established is that data contamination does not automatically result in procedural inadmissibility; instead, it reduces the evidentiary weight of the degraded artifacts and mandates a restorative technical examination to clarify the truth.
+
+\subsubsection*{Cellphone Forensics}
+Alberto Stasi's cellular telephone was not acquired for formal forensic analysis until June 18, 2009.\\
+The first-instance judgment highlighted that this delay created a severe authenticity challenge, as mobile devices are dynamic environments prone to automatic data deletion, system updates, and volatile memory loss over time.
+\medskip
+
+\noindent
+Because a full bit-level reconstruction was impossible, the judge relied on circumstantial evidence; the device arrived poorly preserved (dead battery, alarm disabled), and ignored preservation protocols meant technical certainty was lost.
+
+\subsubsection*{The Appeal Rejection}
+During the appeal phase in 2011, the Prosecutor General requested a complete evidentiary reopening to re-analyze the laptop using "more up-to-date techniques." \\
+The Court of Assizes of Appeal denied the request, noting that the prosecution's motion lacked specific technical references and had been effectively abandoned during final closing submissions.
+
+
+
+\subsection{The 10 Errors of Digital Forensics: Impact Map}
+The Garlasco case functions as an international training case study for identifying procedural deviations from international digital forensics standards, including the Association of Chief Police Officers (ACPO) guidelines, the Scientific Working Group on Digital Evidence (SWGDE), and the National Institute of Standards and Technology (NIST).
+
+\subsubsection*{Critical Errors: Fundamental Violations}
+\begin{itemize}
+    \item \textbf{Error 1: Working Directly on the Original Evidence Without Protection:} Executing repeated logins on the target PC resulting in the corruption or alteration of 73.8\% of visible data.\\ This directly violates \textbf{ACPO Principle 1}, which mandates that no actions taken by law enforcement should modify data subsequently relied upon in a court of law.
+    \item \textbf{Error 2: Failure to Generate an Immediate Forensic Duplicate:} Delaying the bit-stream duplicate creation for 15 days.\\
+    This constitutes a direct breach of \textbf{NIST SP 800-86}
+    \item \textbf{Error 3: Absence of Write-Blocker:} Running device operations without write-blockers, leading to the creation of rogue system files during police custody. This directly breaches \textbf{SWGDE best practices}.
+\end{itemize}
+
+\subsubsection*{Serious Errors}
+\begin{itemize}
+    \item \textbf{Error 4: Incomplete Documentation:} The official report dated August 29 omitted the true number of system accesses, left the connection of external USB peripherals unrecorded, failed to note the mapping of an external hard drive, and completely omitted multiple accesses to the target thesis file. This violates \textbf{ACPO Principle 3}, which requires a complete, repeatable audit trail of all interventions.
+    \item \textbf{Error 5: Deployment of Untrained Operators Without Technical Experts:} The operations were carried out by police officers who were explicitly recognized by the judge as "not experts in the field". This breaches \textbf{ACPO Principle 2}, which states that any person accessing original digital evidence must be fully competent to execute the tasks and capable of explaining the technical implications of their actions to the court.
+    \item \textbf{Error 6: Uncontrolled Contamination from External Storage Media:} Connecting external drives without tracking signatures. This introduced automated background writes via mounting scripts, driver installation, and file system metadata generation. \textbf{SWGDE standards} mandate that investigators must completely understand, test, and document the specific impact of every technical intervention applied to an exhibit.
+\end{itemize}
+
+\subsubsection*{Medium-High Errors:}
+\begin{itemize}
+    \item \textbf{Error 7: Severe Evidentiary Latency in Mobile Device Seizure:} Delaying the acquisition of the defendant's mobile phone for 22 months. This directly contradicts \textbf{NIST SP 800-101r1}.
+    \item \textbf{Error 8: Fragile Technical Inferences from Degraded Artifacts:} Relying on the false logic that a lack of temporary files implied a lack of user activity.\\ Data degradation produces a cascading effect where compromised source data leads to fragile technical assumptions, rendering the entire analytical reconstruction unstable.
+    \item \textbf{Error 9: Unstructured Digital Investigation Governance:} The absence of a standardized investigation pipeline.\\
+    The first-instance judge noted a state of "radical confusion" regarding evidence management, noting "metastatic" negative effects across the subsequent expert examinations. This shows a failure to apply \textbf{ACPO Principle 4}
+    \item \textbf{Error 10: Lack of Timeline and Time-Skew Standardization:} The technical investigation failed to systematically account for system clock drift, clock skew, or native time zone offsets from the outset. \textbf{NIST SP 800-86} .
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Error / Violation} & \textbf{ACPO Guideline} & \textbf{SWGDE Best Practices} & \textbf{NIST Standards} \\ \hline
+1. Working on original directly & Principle 1 & § Data Minimization & SP 800-86 \\ \hline
+2. Delayed duplicate creation & Principle 1 & § Immediate Acquisition & SP 800-86 \\ \hline
+3. Absence of write-blocking & Principle 1 & § Write-blocking & SP 800-86 \\ \hline
+4. Incomplete audit trail & Principle 3 & § Documentation & SP 800-86 \\ \hline
+5. Unqualified operators & Principle 2 & § Technical Competence & — \\ \hline
+6. Untracked USB insertion & Principle 3 & § Process Auditability & SP 800-86 \\ \hline
+7. 22-Month mobile latency & Principle 1 & § Evidence Integrity & SP 800-101r1 \\ \hline
+8. Fragile technical inferences & Principle 4 & § Analysis Robustness & SP 800-86 \\ \hline
+9. Defective governance & Principle 4 & § Forensic Pipeline & SP 800-86 \\ \hline
+10. Unverified time drift/skew & — & § Repeatability & SP 800-86 § 3 \\ \hline
+\end{tabular}%
+}
+\caption{Cross-reference matrix mapping the Garlasco case procedural errors against international digital forensics standards.}
+\label{tab:garlasco_errors}
+\end{table}
+

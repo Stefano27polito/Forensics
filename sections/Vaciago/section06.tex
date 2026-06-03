@@ -1,0 +1,154 @@
+\section{Paolo dal Checco: Garlasco Case}
+
+\begin{quotation}
+    \textbf{Author's note:} I did't understand if this chapter is part of the exam. By the way, this lesson is focused on the interaction between Paolo Dal Checco and Prof. Vaciago
+\end{quotation}
+
+\subsection{The Three Pillars}
+Dal Checco identifies three fundamental phases in every investigation:
+\begin{enumerate}
+    \item \textbf{Acquisition:} Creating a "Forensic Copy." It differs from a simple copy-paste because it must be legally valid for court (bit-stream image with hashing).
+    \item \textbf{Analysis:} Studying data, often using \textbf{Virtual Machines} to replicate the original environment and test hypotheses.
+    \item \textbf{Presentation:} Reporting findings to non-technical stakeholders (judges, lawyers). The "secret" is to use non-technical language
+\end{enumerate}
+
+
+\subsection{Garlasco Case Analysis}
+The Garlasco case is used to illustrate how digital forensics evolves over decades.
+
+\subsubsection*{1. The Super Timeline}
+A critical tool used in modern reviews of old cases.
+\begin{itemize}
+    \item \textbf{Timeline:} Based only on file system metadata (MAC times: Modified, Accessed, Created).
+    \item \textbf{Super Timeline:} Aggregates file system metadata with application logs, artifacts (e.g., browser history, system events), and file content. 
+    \item \textbf{Tools:} \texttt{Plaso} is the industry standard for generating these complex temporal graphs.
+\end{itemize}
+
+\subsubsection*{2. Forensic Evolution and Cold Cases}
+Why re-analyze a computer after 18 years?
+\begin{itemize}
+    \item \textbf{Technological Progress:} Modern tools can extract artifacts that were invisible or unknown to researchers in 2008.
+    \item \textbf{Hypothesis Testing:} Using Virtual Machines to simulate user activity on the exact OS version of the time.
+\end{itemize}
+
+\subsection{AI in Forensics}
+The use of AI is becoming a standard support for investigators:
+\begin{itemize}
+    \item \textbf{Usage:} Analyzing massive amounts of public data (e.g., transcribing and summarizing 50+ hours of YouTube technical debates).
+    \item \textbf{Privacy:} Experts must use Local LLMs to ensure that sensitive or case-related data never leaves the forensic workstation.
+    \item \textbf{Transparency:} If AI helps find a clue, the expert must be able to reconstruct and explain the path manually to the judge.
+\end{itemize}
+
+
+\subsection{Timeline from the laptop delivery to the final appeals}
+
+\subsubsection{The "Non-Forensic" Phase (14--29 August 2007)}
+During the first 15 days of the investigation, the laptop was in the custody of carabinieri, who lacked specific digital forensic competence.
+
+\subsubsection*{Methodological Errors and Metadata Destruction}
+The Carabinieri performed "repeated and improper" accesses to the device without write-blocking measures:
+\begin{itemize}
+    \item \textbf{The "Save" Mistake:} In an attempt to "protect" the suspect's university thesis, officers opened the file and saved it. This action altered the \textbf{Last Access} and \textbf{Last Modified} timestamps, destroying critical metadata needed to verify the digital alibi.
+    \item \textbf{Undocumented Peripherals:} External USB drives were connected to the evidence without being recorded in the chain of custody.
+    \item \textbf{Contamination:} Over 56,000 files were altered or removed (approx. 73.8\% of visible files), creating what the judge called "devastating effects" on the integrity of the evidence.
+\end{itemize}
+
+\subsubsection{Multi-Source Correlation and Digital Alibi}
+The core of the legal debate was the \textbf{Digital Alibi}: could the computer have been working "autonomously" while the murder was committed?
+
+\begin{itemize}
+    \item \textbf{Integration of Heterogeneous Data:} A solid timeline requires merging digital logs with real-world events (phone calls, missed calls, and even "stupid" events like football matches).
+    \item \textbf{Probabilistic Reasoning:} The expert report analyzed usage patterns on "anonymous" landlines to attribute calls to the suspect.
+    \item \textbf{OSINT and Psychology:} Forensics is not just technical; it involves Open Source Intelligence and behavioral analysis (e.g., comparing the order of files in a laptop to the order of items in the suspect's bag).
+\end{itemize}
+
+\subsubsection{Legal Rejection of Inadmissibility (Order of 17 March 2009)}
+Despite the documented contamination, the court rejected the defense's request to declare the evidence inadmissible.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{3cm}|p{8cm}|}
+\hline
+\textbf{Court's Argument} & \textbf{Reasoning} \\
+\hline
+Intrinsic Fragility & Digital documents are easily altered by nature, unlike paper. This requires safeguards but doesn't immediately invalidate the proof. \\
+\hline
+Qualification of Acts & The Carabinieri's actions were classified as \textbf{"PG Acts" (Art. 348 c.p.p.)} rather than a technical examination. This allowed the material to be admitted despite methodological flaws. \\
+\hline
+Good Faith & The errors were considered "good-faith" attempts to preserve data, not intentional tampering. \\
+\hline
+\end{tabular}
+\caption{Legal justification for admitting contaminated evidence.}
+\end{table}
+
+\subsubsection{The "Moment of Discontinuity" and Digital Archaeology}
+On 29 August 2007, the evidence was finally transferred to specialized consultants.
+\begin{itemize}
+    \item \textbf{Digital Archaeology:} Experts had to work on a "degraded" exhibit, trying to reconstruct the truth \textit{despite} the contamination using residual artifacts and temporary files.
+    \item \textbf{Residual Reconstruction:} Through these artifacts, they reconstructed a sequence (Login $\rightarrow$ Pornography $\rightarrow$ Thesis) to fill the "evidentiary gap" left by the police.
+\end{itemize}
+
+\subsection{Mobile Devicessu}
+The suspect's cellphone was acquired only on 18 June 2009 (22 months after the murder).
+\begin{itemize}
+    \item \textbf{Dynamic Nature:} Mobile devices are not static; battery drain, automatic deletions, and updates change the content over time.
+    \item \textbf{Authenticity Gap:} A delay of nearly two years creates a "structural problem of authenticity," as the device state in 2009 cannot reliably represent the state in 2007.
+\end{itemize}
+
+
+\subsection{Legal Ethics and Forensic Errors}
+
+An "important" aspect of Garlasco case, is understendic the innumerevolar errors.
+
+\subsection{Custody vs. Definitive Sentence}
+Is important to understand the legal status of the suspect to distinguish between preventive measures and execution of punishment:
+\begin{itemize}
+    \item \textbf{Pre-trial Detention (Art. 274 c.p.p.):} Requires one of three "precautionary needs": 
+        \begin{enumerate}
+            \item Danger of flight (\textit{pericolo di fuga}).
+            \item Risk of evidence tampering (\textit{inquinamento delle prove}).
+            \item Risk of recidivism (\textit{reiterazione del reato}).
+        \end{enumerate}
+    \item \textbf{Case Status:} Alberto Stasi is currently serving a \textbf{definitive sentence}. His legal actions now concern a \textbf{Revision of the Trial} based on new evidence.
+    \item \textbf{Semi-liberty:} A penitentiary measure allowing the convict to work outside during the day while returning to prison at night.
+\end{itemize}
+
+\subsubsection{The "Free Conviction" Dilemma (Art. 191 c.p.p.)}
+A critical legal-philosophical point is discussed regarding how judges evaluate technical data:
+\begin{itemize}
+    \item \textbf{Libero Convincimento:} The judge is the \textit{Peritus Peritorum} (Expert of Experts). They are not strictly bound by scientific results if the expert's reasoning is unconvincing.
+    \item \textbf{Scientific Proof vs. Technocracy:} If science were legally binding (\textit{prova legale}), the judge would be redundant. However, Vaciago notes that "incompetent judges" often decide based on the quality of the presentation rather than the scientific validity of the evidence.
+\end{itemize}
+
+\subsection{List of Forensic Errors}
+Based on the classroom discussion, the following errors compromised the integrity of the digital evidence:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{13cm}|}
+\hline
+ & \textbf{Description of Forensic |   Procedural Error} \\
+\hline
+1 & \textbf{Lack of Initial Imaging:} Failure to perform a bit-stream image before interaction. \\
+\hline
+2 & \textbf{Absence of Write-Blockers:} Direct access to the live OS without hardware/software write protection. \\
+\hline
+3 & \textbf{No Hash Value Calculation:} Failure to establish a "digital fingerprint" to verify data integrity later. \\
+\hline
+4 & \textbf{15 Days of Untracked Access:} Continuous, undocumented manipulation by non-expert personnel. \\
+\hline
+5 & \textbf{Unrecorded Peripherals:} Connecting unknown USB devices, altering system logs and registry keys. \\
+\hline
+6 & \textbf{Metadata Corruption:} Opening and saving files (the thesis), which updated "Last Access" and "Last Modified" timestamps. \\
+\hline
+7 & \textbf{22-Month Latency:} Delay in acquiring mobile devices, leading to data loss due to the dynamic nature of flash memory. \\
+\hline
+8 & \textbf{Misclassification of Acts:} Treating digital analysis as simple "Police Activity" (Art. 348) instead of "Irrepeatable Technical Examination" (Art. 360). \\
+\hline
+9 & \textbf{Judicial Rejection of New Analysis:} The court's refusal to apply modern forensic techniques to "repair" previous epistemic damage. \\
+\hline
+10 & \textbf{Privacy vs. Relevance:} Disclosing detailed pornographic search history when only the \textit{timestamp of activity} was relevant to the alibi. \\
+\hline
+\end{tabular}
+\end{table}

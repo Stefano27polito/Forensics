@@ -1,0 +1,57 @@
+\section{Digital Forensics and Generative AI}
+
+The integration of LLMs into digital forensics offers new ways to speed up evidence analysis.\\
+However, because LLMs operate on probabilistic principles, their application introduces unique risks concerning evidence validation, repeatability, and legal admissibility.
+
+\subsection{LLM Workflows}
+
+LLMs are advanced AI systems that generate human-like text outputs.\\
+They utilize trillions of parameters to compute linguistic relationships between tokens regardless of their distance within a dataset.
+
+\subsubsection*{Enhancing Efficiency across Investigative Phases}
+When applied to data, generative models streamline the parsing of unstructured textual or visual sources:
+\begin{itemize}
+    \item \textbf{Early Log and Data Analysis:} LLMs parse large volumes of unstructured or semi-structured system logs to flag anomalies, detect unauthorized access attempts, identify potential security breaches, and map early Indicators of Compromise (IoC).
+    \item \textbf{Textual and Visual Evidence Sorting:} Advanced foundation models (such as GPT-4) excel at analyzing raw textual content, interpreting written evidence, and drafting preliminary forensic reports.
+    \item \textbf{Multimodal Contextual Analysis:} Specialized visual models combine Natural Language Processing (NLP) with computer vision to automatically detect and categorize objects or faces inside images
+\end{itemize}
+
+\subsection{Operational Risks}
+
+Despite their operational utility, generative frameworks pose distinct structural challenges when evaluated against strict forensic standards.
+
+\subsubsection*{1. Reliability and Adversarial Vulnerabilities}
+The reliability of AI output is directly correlated with anti-forensic countermeasures.
+\begin{itemize}
+    \item \textbf{Adversarial Robustness Flaws:} Bad actors can evade detection by altering file extensions, embedding steganographic data, or using adversarial perturbations specifically designed to trick AI classifiers.
+    \item \textbf{Visual Patch Vulnerabilities:} Tiny pixel alterations, invisible to a human investigator, can cause an AI to misclassify an illicit item.
+\end{itemize}
+
+\subsubsection*{2. Repeatability vs. Probabilistic Incoherence}
+Digital forensics requires strict determinism, meaning that executing the exact same analytical process over identical evidence must always yield an identical result.
+\begin{itemize}
+    \item \textbf{Probabilistic Problem:} Because LLMs and agentic AI frameworks run on probabilistic predictions, entering the exact same prompt twice through a pipeline (such as an AutoGen setup) can yield two different execution paths, text summaries, or script outputs.
+    \item \textbf{Solutions:} Current research focuses on integrating deterministic sandboxing and verification tools. Frameworks like \textit{AutoDFBench} have been developed to rigorously test and validate AI-generated forensic scripts against established NIST standards to ensure compliance.
+\end{itemize}
+
+\subsubsection*{3. Recoverability}
+The process of file reconstructing corrupt data introduces a shift from physical byte validation to predictive generation.
+\begin{itemize}
+    \item \textbf{Recovery Target}
+    \begin{itemize}
+        \item \textbf{Traditional Data Carving:} Searches for rigid binary signatures, such as file headers and footers (e.g., \texttt{\textbackslash xFF\textbackslash xD8\textbackslash xFF} for JPEGs).
+        \item \textbf{AI-Assisted Semantic Carving:} Evaluates the linguistic, semantic, and contextual flow between unallocated text fragments.
+    \end{itemize}
+
+    \item \textbf{Execution Method}
+    \begin{itemize}
+        \item \textbf{Traditional Data Carving:} Physically maps and stitches continuous raw disk sectors back together.
+        \item \textbf{AI-Assisted Semantic Carving:} Predicts how missing or damaged data strings should logically connect based on learned linguistic patterns.
+    \end{itemize}
+
+    \item \textbf{Legal Admissibility}
+    \begin{itemize}
+        \item \textbf{Traditional Data Carving:} Data either matches structural rules or fails.
+        \item \textbf{AI-Assisted Semantic Carving:} ùThe resulting file may appear correct but cuold be wrong, making it easy to challenge in court.
+    \end{itemize}
+\end{itemize}
