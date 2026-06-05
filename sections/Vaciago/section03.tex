@@ -1,6 +1,7 @@
 \section{Italian Law n.48/2008}
 
-Italian Law n. 48/2008 represents the formal ratification of the \textbf{Budapest Convention on Cybercrime} (2001). While the Convention provides the international baseline for harmonizing cybercrime legislation, the Italian implementation focuses on the modernization of the legal system to address the rapidly evolving digital landscape.
+Italian Law n. 48/2008 represents the \underline{formal ratification} of the \textbf{Budapest Convention on Cybercrime}.\\
+While the Convention provides the international baseline for harmonizing cybercrime legislation, the Italian implementation focuses on the modernization of the legal system to address the rapidly evolving digital landscape.
 \bigskip
 
 \noindent
@@ -64,7 +65,7 @@ A critical interpretation by the Italian Court of Cassation concerns users who p
 \end{itemize}
 
 \subsection{Evolution of Digital Damage and Data Alteration}
-The legal definition of "damage" in the Italian system has evolved from a 1944-era focus on physical destruction to a modern understanding of functional availability.
+The legal definition of "damage" in the Italian system has evolved starting from 1944 focusing on physical destruction to a modern understanding of functional availability.
 \medskip
 
 \noindent
@@ -81,20 +82,6 @@ Since 2016, the Italian system has narrowed the scope of criminal data alteratio
     \item \textbf{Private vs. Public:} Falsifying information between private parties is generally no longer a crime unless it constitutes fraud. However, falsifying documents for public institutions remains a serious offense.
     \item \textbf{Deepfakes:} The 2025 AI legislation formally introduced specific crimes related to deepfakes to address the modern ease of digital falsification.
 \end{itemize}
-
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[font=\small,node distance=6mm,>=Latex,
-box/.style={rectangle,rounded corners,draw=black,fill=gray!10,align=center,text width=5cm,minimum height=5mm}]
-\node[box] (step1) {\textbf{Legal Access}\\Legitimate Credentials};
-\node[box, below=0.5cm of step1] (step2) {\textbf{Policy Violation}\\Use for unauthorized purpose};
-\node[box, below=0.5cm of step2, fill=red!5] (step3) {\textbf{Art. 615-bis/ter}\\Criminal Unauthorized Access};
-\draw[->] (step1) -- (step2);
-\draw[->] (step2) -- (step3);
-\end{tikzpicture}
-\caption{The shift from legitimate access to criminal offense based on functional intent.}
-\end{figure}
 
 
 \subsection{Digital Forensics under Law 48}
@@ -126,22 +113,6 @@ Providers must store logs to allow the retrospective reconstruction of digital c
     \item \textbf{Access Limits:} Access to this data requires a judicial mandate, balancing investigative needs with the right to privacy as outlined in the GDPR and NIS2 frameworks.
 \end{itemize}
 
-\begin{table}[H]
-\centering
-\small
-\begin{tabular}{|p{3cm}|p{5cm}|p{2.5cm}|}
-\hline
-\textbf{Forensic Phase} & \textbf{Technical Requirement} & \textbf{Legal Goal} \\
-\hline
-Identification & System mapping and volatile data triage & Completeness \\
-Acquisition & Bit-stream imaging and Hashing & Immutability \\
-Preservation & Controlled storage and Chain of Custody & Admissibility \\
-Analysis & Use of validated forensic tools & Reliability \\
-\hline
-\end{tabular}
-\caption{The standard forensic workflow under Law 48/2008 requirements.}
-\end{table}
-
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[font=\small,node distance=7mm,>=Latex,
@@ -156,6 +127,6 @@ box/.style={rectangle,rounded corners,draw=black,fill=gray!10,align=center,text 
 \caption{Linear flow of digital evidence from acquisition to court admission.}
 \end{figure}
 
-\subsubsection*{The Role of the CISO in Investigations}
+\subsubsection*{The Role of the CISO}
 In the context of corporate liability (D.Lgs. 231/2001), the CISO must ensure that internal incident response procedures do not contaminate potential evidence. Improper handling of a system after a breach can lead to the inadmissibility of evidence, hindering the organization's ability to defend itself or prosecute the attacker.
 
