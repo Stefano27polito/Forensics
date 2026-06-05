@@ -308,25 +308,20 @@ The establishment of a Tor circuit relies on an asymmetrical trust model oversee
     \item \textbf{Network Consensus:} A signed descriptor file published hourly by the DAs. Before establishing a connection, the Tor client fetches this consensus to obtain an authenticated, up-to-date list of all active and reliable relays within the network.
 \end{itemize}
 
-\subsubsection*{The Three-Layer Relay Mechanism}
+\subsubsection*{Three Layer Relay Mechanism}
 A standard Tor circuit consists of three distinct nodes randomly selected by the client from the network consensus. This multi-hop structure ensures that no single node can link the user's IP address to the destination server.
 
-\begin{table}[H]
-\centering
-\small
-\begin{tabular}{|p{3cm}|p{4.5cm}|p{4.5cm}|}
-\hline
-\textbf{Node Type} & \textbf{Ingress/Egress Visibility} & \textbf{Forensic/Cryptographic State} \\
-\hline
-\textbf{Entry / Guard Node} & Sees the client's real IP address. Cannot see the destination server. & Only decrypts the outermost encryption layer to identify the Middle Node. \\
-\hline
-\textbf{Middle Node} & Sees only the Entry Node and the Exit Node. Completely isolated. & Decrypts the second layer of encryption. Has zero visibility of endpoints. \\
-\hline
-\textbf{Exit Node} & Sees the Middle Node and the unencrypted destination server target. & Decrypts the final layer of encryption. Forwards raw traffic to the open internet. \\
-\hline
-\end{tabular}
-\caption{Tor Circuit Node Classification and Visibility Thresholds.}
-\end{table}
+\begin{itemize}
+    \item \textbf{Entry / Guard Node:} Sees the client's real IP address,cannot see the destination server.\\
+    It can only decrypts the outermost encryption layer to identify the Middle Node.
+
+    \item \textbf{Middle Node} Sees only the Entry Node and the Exit Node.\\
+    It decrypts the second layer of encryption and has zero visibility of endpoints.
+
+    \item \textbf{Exit Node:} Sees the Middle Node and the unencrypted destination server target. 
+\end{itemize}
+
+
 
 \subsubsection*{Multi-Layered Onion Encryption}
 The core cryptographic mechanism relies on symmetric keys established via a DH handshake.
