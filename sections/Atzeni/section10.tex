@@ -1,82 +1,59 @@
 \section{Cloud Forensics}
 
-Cloud forensics represents a cross-cutting domain that blends digital forensics with cloud computing infrastructure. It requires specialized methodologies due to the decentralized, virtualized, and multi-tenant nature of cloud environments, which render traditional host-based acquisition techniques insufficient.
+Cloud forensics rrequires specialized methodologies due to the decentralized, virtualized, and multi-tenant nature of cloud environments, which make traditional acquisition techniques insufficient.
 
-\subsubsection*{Architectural Models and Legal Jurisdictions}
-The feasibility of data collection is inherently correlated with the cloud service model and complex data sovereignty laws.
+\subsubsection*{Architectural Models}
+The feasibility of data collection is inherently correlated with the cloud service model.
 \medskip
 
 \noindent
-An investigator's access to evidentiary data decreases as the abstraction level of the cloud service model increases:
+The level of control and access to forensic artifacts decreases with the abstraction layer
 \begin{itemize}
-    \item \textbf{Infrastructure as a Service (IaaS):} The investigator retains maximal control, allowing for the acquisition of virtual machine (VM) disk images, volatile memory snapshots, and guest operating system logs.
-    \item \textbf{Platform as a Service (PaaS):} Access is restricted to application-level logs, database transaction records, and configuration state files. The underlying operating system and hardware layers are managed exclusively by the Cloud Service Provider (CSP).
-    \item \textbf{Software as a Service (SaaS):} The investigator possesses minimal visibility, relying entirely on high-level application dashboards, user activity logs, and API-exposed data exports.
+    \item \textbf{Infrastructure as a Service (IaaS):} The investigator has maximal control, allowing for the acquisition of VM disk images, volatile memory snapshots, and guest operating system logs.
+    \item \textbf{Platform as a Service (PaaS):} Access is restricted to application-level logs, database transaction records, and configuration state files. The underlying operating system and hardware layers are managed exclusively by the Cloud Service Provider.
+    \item \textbf{Software as a Service (SaaS):} The investigator has minimal visibility, it can only access to  application dashboards, user activity logs, and API-exposed data exports
 \end{itemize}
 
-\subsection{Data Sovereignty and Multi-Jurisdiction Challenges}
-Cloud data is rarely static or geographically isolated; CSPs dynamically distribute data fragments across global data centers to optimize performance and availability.
+\subsection{Multi-Jurisdiction}
+Cloud data is physically distributed across global data centers, often spanning multiple legal jurisdictions simultaneously.
 \begin{itemize}
     \item \textbf{Jurisdictional Fragmentation:} A single forensic investigation may involve data physically stored in one country, owned by an entity registered in another, and processed through an infrastructure situated in a third.
     \item \textbf{Legal Access Barriers:} Traditional search warrants are often unenforceable across international borders, forcing reliance on Mutual Legal Assistance Treaties (MLATs), which are notoriously slow and ill-suited for volatile digital data.
 \end{itemize}
 
-\subsubsection{Technical Acquisition Challenges and Multi-Tenancy}
-The technical execution of cloud forensics introduces fundamental deviations from standard local storage acquisition principles.
+\subsubsection{Technical Acquisition}
+As I said before, the technical acquisition of evidence in cloud environments is fundamentally different from traditional local forensics. The lack of physical access to hardware and the dynamic nature of cloud resources necessitate a shift towards logical acquisition methods.
 
-\subsubsection*{The Loss of Physical Control and Volatility}
-Investigators cannot physically seize a cloud data center. Consequently, data collection must occur over the network, introducing data integrity risks and relying on hypervisor-level snapshots that may be modified during the acquisition window.
+\subsubsection*{Loss of Physical Control and Volatility}
+Investigators cannot physically access to a cloud data center. Consequently, data collection must occur over the network, introducing data integrity risks and relying on hypervisor-level snapshots that may be modified during the acquisition window.
 
-\subsubsection*{Multi-Tenancy and Privacy Infiltration}
+\subsubsection*{Multi-Tenancy}
 Cloud servers simultaneously host data from thousands of independent customers (\textit{tenants}) on the same physical hardware via virtualization layers.
 \begin{itemize}
     \item \textbf{Co-Mingled Data Risk:} Traditional bit-stream imaging of a physical drive in a cloud environment is legally impossible, as it would capture data belonging to innocent third-party tenants, violating privacy regulations like GDPR.
-    \item \textbf{Logical Isolation:} Acquisition must pivot entirely to targeted logical extractions (e.g., isolated virtual disks, targeted API log pulls) rather than block-level duplication.
+    \item \textbf{Logical Isolation:} Instead of copying everything at once, the acquisition process should focus on pulling only the specific information that's needed. This means extracting individual virtual disks or getting specific log data from APIs, rather than doing a complete block-by-block copy of everything.
 \end{itemize}
 
-\subsection{Forensic Artifacts and Log Source Analysis}
-Because physical artifacts are inaccessible, cloud investigations rely heavily on centralized logging facilities provided by the infrastructure.
-
-\begin{table}[H]
-\centering
-\small
-\begin{tabular}{|p{3.5cm}|p{8.5cm}|}
-\hline
-\textbf{Log Facility Category} & \textbf{Forensic and Investigative Utility} \\
-\hline
-\textbf{Management Plane Logs} & Tracks API calls modifying the infrastructure (e.g., AWS CloudTrail). Identifies unauthorized VM creations, snapshot deletions, or IAM policy modifications. \\
-\hline
-\textbf{Identity \& Access Management (IAM)} & Records authentication events, token generations, and privilege escalations. Vital for establishing attribution and timeline verification. \\
-\hline
-\textbf{Storage Layer Logs} & Logs object-level access metadata (e.g., AWS S3 server access logs). Critical for proving data exfiltration or tampering. \\
-\hline
-\end{tabular}
-\caption{Classification of primary cloud forensic log sources.}
-\end{table}
-
-\subsubsection*{Virtualization and Ephemeral Storage}
-Virtual machines frequently utilize ephemeral storage—temporary block devices that exist only during the active lifecycle of the instance. 
-\begin{itemize}
-    \item \textbf{The Ephemeral Trap:} If an compromised or malicious VM instance is terminated or deleted before a forensic snapshot is committed, the volatile storage and local logs are instantly destroyed by the hypervisor's automated resource reallocation mechanisms, leaving zero physical traces behind.
-\end{itemize}
-
-\subsection{Cloud Peculiarities and Investigative Effects}
-
-The structural divergence of cloud environments from traditional localized architectures introduces specific investigative paradigms. These peculiarities alter how digital evidence is generated, localized, and conceptually approached by forensic practitioners.
-
-\subsubsection{Structural Peculiarities of Cloud Environments}
-Cloud computing relies on abstract, distributed, and dynamically allocated systems that redefine the parameters of digital trace evidence.
+\subsection{Artifacts and Log}
+Since physical artifacts are inaccessible, cloud investigations rely on centralized logging provided by the infrastructure.
 
 \begin{itemize}
-    \item \textbf{Absence of Physical Operational Control:} Investigators cannot directly access, isolate, or seize the physical server infrastructure or storage media hosting the compromised system.
-    \item \textbf{Hyper-Volatility and Ephemerality:} System states, network configurations, and active virtual nodes are highly transient. Instances can be provisioned, modified, or permanently de-provisioned within seconds, risking immediate evidence destruction.
-    \item \textbf{Data Co-Mingling and Multi-Tenancy:} Evidentiary data resides on shared physical hardware alongside volumes belonging to unrelated entities (tenants), preventing block-level disk imaging due to severe legal and privacy constraints.
-    \item \textbf{Dynamic Data Redistribution:} Data payloads are continuously fragmented, replicated, and moved across multiple physical servers and geographical locations to maintain load balancing and fault tolerance.
+    \item \textbf{Management Plane Logs}: Tracks API calls modifying the infrastructure (e.g., AWS CloudTrail).\\ Identifies unauthorized VM creations, snapshot deletions, or IAM policy modifications.
+    \item \textbf{Identity \& Access Management (IAM)}: Records authentication events, token generations, and privilege escalations. 
+    \item \textbf{Storage Layer Logs}: Logs object-level access metadata (e.g., AWS S3 server access logs).\\ Critical for proving data exfiltration or tampering.
 \end{itemize}
 
-\subsubsection{The Paradigm Shift: From Local to Cloud Forensics}
-The translation of forensic practices from local hosts to cloud architectures demonstrates a fundamental shift in methodologies, validation protocols, and technical dependencies.
+\subsubsection*{Ephemeral Storage}
+Virtual machines frequently utilize ephemeral storage that exist only during the active lifecycle of the instance.
+\medskip
 
+\noindent
+That poses a complicated challenge.\\ 
+If an compromised or malicious VM instance is terminated or deleted, the volatile storage and local logs are instantly destroyed by the hypervisor, leaving zero physical traces behind.
+\bigskip
+
+\noindent
+A comparison between traditional local forensics and cloud digital forensics.
 \begin{table}[H]
 \centering
 \small
@@ -84,63 +61,44 @@ The translation of forensic practices from local hosts to cloud architectures de
 \hline
 \textbf{Forensic Dimension} & \textbf{Traditional Local Forensics} & \textbf{Cloud Digital Forensics} \\
 \hline
-\textbf{Data Acquisition Method} & Physical bit-stream imaging (dd, E01) of localized hardware sectors. & Logical extraction via APIs, dashboard snapshots, and hypervisor-level logs. \\
+\textbf{Data Acquisition Method} & Physical bit-stream imaging of localized hardware sectors. & Logical extraction via APIs, dashboard snapshots, and hypervisor-level logs. \\
 \hline
-\textbf{Chain of Custody Validation} & Cryptographic hashing (SHA-256) of the entire physical drive. & Independent logging of API data transfers, token signatures, and CSP metadata. \\
+\textbf{Chain of Custody Validation} & Cryptographic hashing (SHA-256) of the entire physical drive. & Independent logging of API data transfers, token signatures.\\
 \hline
 \textbf{Evidence Storage Location} & Static local storage media (SATA/NVMe HDDs or SSDs). & Distributed object storage systems and multi-tenant virtual disk arrays. \\
 \hline
-\textbf{Dependency Framework} & Direct execution of hardware and software forensic write-blockers. & Mandatory reliance on Cloud Service Provider (CSP) cooperation and tools. \\
+\textbf{Dependency Framework} & Direct execution of hardware and software forensic write-blockers. & Mandatory reliance on Cloud Service Provider cooperation and tools. \\
 \hline
 \end{tabular}
 \caption{Comparative analysis of traditional local forensics vs. cloud forensic practices.}
 \end{table}
 
-\subsubsection{The Triad of Cloud Investigative Challenges}
-Investigations within cloud infrastructures are systematically hindered by three primary technical and legal obstacles.
 
-\subsubsection*{1. Ephemeral Nature of Evidence}
-Data storage in virtualized instances can vanish instantly if not explicitly committed to persistent storage volumes.
+\subsection{Legal Foundations}
+
+\subsubsection{Service Level Agreements (SLA)}
+Legal boundary of what an investigator can recover is defined before the incident occurs by the contract between the customer and the provider.
 \begin{itemize}
-    \item \textbf{The Volatility Trap:} Critical forensic data—including volatile memory contents (RAM), running process registries, local tmp directories, and temporary hypervisor caches—is completely lost the moment a virtual machine instance is stopped, restarted, or deleted.
+    \item \textbf{Data Retention Thresholds:} The SLA establishes how long logs are kept before being overwritten.
+    \item \textbf{Forensic Clauses:} It explicitly defines whether the tenant has the right to request live memory captures, hypervisor snapshots, or detailed hardware level audit trails during an active security incident.
 \end{itemize}
 
-\subsubsection*{2. Decentralized Data Ingestion}
-Unlike standard systems where traces are centralized within fixed OS log hierarchies, cloud architecture splits logging across independent monitoring planes.
-\begin{itemize}
-    \item \textbf{Log Fragmentation:} Tracking a single malicious action requires the complex correlation of infrastructure-level API calls, identity provider authentication tokens, hypervisor state changes, and localized application logs.
-\end{itemize}
-
-\subsubsection*{3. Jurisdictional Incoherence}
-Because data is dynamically mirrored across global data centers to reduce latency, the physical location of the evidence frequently spans multiple international borders simultaneously.
-\begin{itemize}
-    \item \textbf{Conflict of Laws:} The physical bits of a single document may be stored under one national legal framework, while the metadata is held under another, complicating traditional search warrants and requiring slow international legal processes (MLATs).
-\end{itemize}
-
-\subsubsection{The Investigative Interface: Dependencies and Legal Foundations}
-Operating effectively in the cloud requires moving away from pure technical extraction toward the integration of service agreements, architectural maps, and provider interfaces.
-
-\subsubsection*{The Role of Service Level Agreements (SLA)}
-When physical hardware is inaccessible, the legal boundary of what an investigator can recover is defined before the incident occurs by the contract between the customer and the provider.
-\begin{itemize}
-    \item \textbf{Data Retention Thresholds:} The SLA establishes how long logs (management plane, access logs, network flow data) are kept before being overwritten.
-    \item \textbf{Forensic Capability Clauses:} It explicitly defines whether the tenant has the right to request live memory captures, hypervisor snapshots, or detailed hardware-level audit trails during an active security incident.
-\end{itemize}
-
-\subsubsection*{Architectural Mapping: Client vs. Server Assets}
-To overcome the limitations of cloud visibility, investigators must explicitly map out which artifacts can be seized locally from the client side versus what must be requested from the cloud server infrastructure.
+\noindent
+Investigators must explicitly map out which artifacts can be captured locally from the client side versus what must be requested from the cloud server infrastructure.
 
 \begin{itemize}
-    \item \textbf{Client-Side Artifacts:} Local endpoints used to access cloud services provide crucial leads. Investigators can recover browser caches, cookie files, local session tokens, synchronization folder residuals, and configuration profiles that map out user intent and connection timelines.
-    \item \textbf{Server-Side Assets:} These include backend database transaction ledgers, centralized identity provider authorization logs, and persistent storage buckets. Accessing these requires working directly with the Cloud Service Provider's security team or using administrative API keys.
+    \item \textbf{Client-Side Artifacts:} Investigators can recover browser caches, cookie files, local session tokens, synchronization folder residuals, and configuration profiles that map out user intent and connection timelines.
+    \item \textbf{Server-Side Assets:} These include backend database transaction ledgers, centralized identity provider authorization logs, and persistent storage buckets.\\ Accessing these requires working directly with the Cloud Service Provider's security team or using administrative API keys.
 \end{itemize}
+\noindent
+Even if thhis division is clear, the SLA may not guarantee access to all server-side artifacts.
 
-\subsection{Cloud Forensics Tools and Acquisition Paradigms}
 
-Data collection within cloud architectures requires specialized programmatic interfaces and tools capable of maintaining data integrity without physical access to the underlying hardware storage tiers.
+\subsection{Cloud Forensics Tools}
 
-\subsubsection{Native CSP Tools and Programmatic Interfaces}
-Due to the virtualization layer, traditional block-level acquisition utilities are replaced by cloud-native logging facilities and command-line interfaces provided directly by the Cloud Service Providers (CSPs).
+Data collection within cloud requires specialized tools capable to maintain data integrity without physical access to the underlying hardware storage tiers.
+
+\subsubsection{Native Cloud Service Porvider Tools}
 
 \begin{itemize}
     \item \textbf{AWS Command Line Interface (CLI):} Used to execute high-privilege administrative scripts to programmatically isolate virtual instances, capture live metadata states, or copy object storage data streams.
@@ -148,28 +106,17 @@ Due to the virtualization layer, traditional block-level acquisition utilities a
     \item \textbf{Azure CLI / PowerShell Modules:} Provides deep programmatic integration into the Microsoft Azure ecosystem, facilitating automated artifact collection from enterprise identity domains and storage accounts.
 \end{itemize}
 
-\subsubsection{Centralized Audit and Ingestion Logs}
+\noindent
 Cloud-native auditing services act as the primary repository for forensic evidence, capturing historical telemetry across both management planes and user operational environments.
 
-\begin{table}[H]
-\centering
-\small
-\begin{tabular}{|l|p{9cm}|}
-\hline
-\textbf{Log Service} & \textbf{Forensic Functionality and Ingestion Capacity} \\
-\hline
-\textbf{AWS CloudTrail} & Records every API call executed within an AWS account. It logs the identity of the caller, the timestamp of the request, the source IP address, and the precise request/response parameters. \\
-\hline
-\textbf{GCP Cloud Logging} & A fully managed real-time log ingestion system that aggregates system, security, and audit logs from across Google Cloud architectures, providing historical audit trails. \\
-\hline
-\textbf{Azure Monitor Logs} & Consolidates platform telemetry and application-layer logs into a centralized Log Analytics workspace, supporting advanced Kusto Query Language (KQL) parsing. \\
-\hline
-\end{tabular}
-\caption{Platform-specific cloud-native audit logging services.}
-\end{table}
+\begin{itemize}
+    \item \textbf{AWS CloudTrail}: Logs AWS API activity with caller identity, timestamp, source IP, and request details.
+    \item \textbf{GCP Cloud Logging}: Centralizes system, security, and audit logs to provide a managed historical trail.
+    \item \textbf{Azure Monitor Logs}: Aggregates platform and application logs in Log Analytics for KQL-based analysis.
+\end{itemize}
 
-\subsubsection{Third-Party Forensic Suites and Open-Source Frameworks}
-When native logs must be integrated into automated forensic preservation workflows, investigators deploy enterprise-grade third-party software and scalable open-source tools.
+\noindent
+When native logs must be integrated into automated forensic preservation workflows, investigators deploy software and tools.
 
 \subsubsection*{Enterprise Acquisition Suites}
 \begin{itemize}
