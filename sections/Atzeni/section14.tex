@@ -23,14 +23,14 @@ Despite their operational utility, generative frameworks pose distinct structura
 \subsubsection*{1. Reliability and Adversarial Vulnerabilities}
 The reliability of AI output is directly correlated with anti-forensic countermeasures.
 \begin{itemize}
-    \item \textbf{Adversarial Robustness Flaws:} Bad actors can evade detection by altering file extensions, embedding steganographic data, or using adversarial perturbations specifically designed to trick AI classifiers.
+    \item \textbf{Adversarial Robustness Flaws:} Attcakers can evade detection by altering file extensions, embedding steganographic data, or using adversarial perturbations specifically designed to trick AI classifiers.
     \item \textbf{Visual Patch Vulnerabilities:} Tiny pixel alterations, invisible to a human investigator, can cause an AI to misclassify an illicit item.
 \end{itemize}
 
-\subsubsection*{2. Repeatability vs. Probabilistic Incoherence}
+\subsubsection*{2. Repeatability vs. Probabilistic}
 Digital forensics requires strict determinism, meaning that executing the exact same analytical process over identical evidence must always yield an identical result.
 \begin{itemize}
-    \item \textbf{Probabilistic Problem:} Because LLMs and agentic AI frameworks run on probabilistic predictions, entering the exact same prompt twice through a pipeline (such as an AutoGen setup) can yield two different execution paths, text summaries, or script outputs.
+    \item \textbf{Probabilistic Problem:} Since LLMs run on probabilistic predictions, entering the exact same prompt twice through a pipeline can yield two different execution paths, text summaries, or script outputs.
     \item \textbf{Solutions:} Current research focuses on integrating deterministic sandboxing and verification tools. Frameworks like \textit{AutoDFBench} have been developed to rigorously test and validate AI-generated forensic scripts against established NIST standards to ensure compliance.
 \end{itemize}
 
