@@ -185,67 +185,6 @@ Modern platforms implement several features that complicate forensic investigati
 
 \noindent
 
-\subsection{Anti-forensics Techniques and Countermeasures}
-
-Anti-forensics refers to a set of methodologies and tools designed to frustrate digital forensic investigations by compromising the availability, reliability, or completeness of evidence.\\
-The primary objective is to increase the investigator's uncertainty and the resources required for a successful analysis.
-
-\subsubsection{Data Hiding and Obfuscation}
-Encryption and steganography represent the two main pillars of data hiding. While encryption makes the content unreadable without a key, steganography aims to hide the very existence of the communication.
-
-\subsubsection*{Steganography in Digital Media}
-\begin{itemize}
-    \item \textbf{Least Significant Bit (LSB) Insertion:} Altering the redundant bits of an image or audio file to embed secret data. Since the changes are imperceptible to human senses, the file appears legitimate.
-    \item \textbf{Detection (Steganalysis):} Investigators use statistical analysis to detect anomalies in the bit distribution of suspected files.
-\end{itemize}
-
-\subsubsection*{Encryption and Hidden Volumes}
-Advanced anti-forensic tools allow the creation of "hidden volumes" within encrypted partitions. 
-\begin{itemize}
-    \item \textbf{Plausible Deniability:} The system is designed such that it is mathematically impossible to prove the existence of a second, hidden volume once the first one is decrypted, providing the user with a defense against coerced password disclosure.
-\end{itemize}
-
-\subsubsection{Wipping and Metadata Manipulation}
-Unlike simple deletion, wiping ensures that data is physically unrecoverable by overwriting sectors. Metadata manipulation, on the other hand, targets the timeline of events.
-
-\subsubsection*{Timestomping}
-Timestomping is the deliberate modification of file system timestamps (Modified, Accessed, Created, and Birth - MACB). 
-\begin{itemize}
-    \item \textbf{Objective:} To disrupt timeline reconstruction and mislead investigators regarding the sequence of malicious activities.
-    \item \textbf{Detection:} Analysts look for inconsistencies between the MFT (STANDARD\_INFORMATION vs.\ FILE\_NAME) and system logs or registry keys that may still hold the original values.
-\end{itemize}
-
-\subsubsection{Volatile Memory and Fileless Malware}
-Modern attacks increasingly avoid writing data to the physical disk to minimize the forensic footprint left in the file system.
-
-\subsubsection*{Memory-Only Execution}
-\begin{itemize}
-    \item \textbf{RAM-only Residency:} Malware resides exclusively in on RAM, disappearing upon system reboot.
-    \item \textbf{Process Injection:} Hiding malicious code within the memory space of legitimate system processes (e.g., \texttt{svchost.exe} or \texttt{explorer.exe}).
-    \item \textbf{Countermeasure:} \textbf{Live Memory Acquisition} is critical. If the system is powered off before an image of the RAM is taken, the evidence is permanently lost.
-\end{itemize}
-
-
-\subsubsection{Detection of Anti-forensic Activity}
-The presence of anti-forensic tools is itself a significant lead.
-\begin{itemize}
-    \item \textbf{Tool Artifacts:} The installation or execution traces of wiping software, encryption suites (e.g., VeraCrypt), or CCleaner provide circumstantial evidence of intent to conceal data.
-    \item \textbf{Statistical Anomalies:} High entropy levels in files or partitions often indicate the presence of encrypted data or compressed malicious payloads.
-\end{itemize}
-
-\noindent
-
-\subsubsection{Countering Anti-forensics}
-The evolution of anti-forensic techniques necessitates a proactive and multi-layered defense strategy\\
-To maintain investigative efficacy, forensic practitioners must employ advanced analytical methods that bypass or mitigate obfuscation attempts.
-
-\begin{itemize}
-    \item \textbf{Deep Packet Inspection (DPI):} Analyzing packet payloads at the application layer to identify malicious intent or hidden content that standard headers might mask.
-    \item \textbf{Encrypted Traffic Analysis (ETA):} Utilizing traffic fingerprinting and behavioral patterns to detect threats within encrypted streams without requiring full decryption, often leveraging session metadata and packet timing.
-    \item \textbf{Behavioral Analytics:} Implementing AI and Machine Learning models to baseline normal network behavior and identify anomalies irrespective of content obfuscation.
-    \item \textbf{Comprehensive Logging (WORM):} Ensuring logs are stored on \textit{Write-Once-Read-Many} media to prevent attackers from deleting or altering traces of their activity.
-    \item \textbf{Threat Intelligence Integration:} Leveraging global databases of known malicious signatures and behaviors to provide real-time context to local forensic findings.
-\end{itemize}
 
 \subsection{Threat Intelligence and Malware Forensics}
 In the context of modern cyber-attacks, identifying a single instance of malware is often insufficient. Digital forensics must integrate \textbf{Threat Intelligence (TI)} to understand the broader scope of an intrusion and attribute it to specific threat actors or campaigns.
